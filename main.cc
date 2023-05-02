@@ -1,6 +1,7 @@
 #include "./interface/console_interface.h"
 
 int main() {
-    ConsoleInterface menu;
+    ConsoleInterface interface;
+    interface.RunConsoleApp();
     return 0;
 }

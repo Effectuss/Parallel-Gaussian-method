@@ -24,3 +24,18 @@ const std::vector<std::string> ConsoleInterface::menu_items_ {
     0. Exit\033[0m\n\u001b[42;1m                    \
                                       \u001b[0m\n\n"                              
                                     };
+
+void ConsoleInterface::RunConsoleApp() {
+    system("clear");
+    bool exit_flag{false};
+    while(!exit_flag) {
+      std::cout << menu_items_[kCreateSLE];
+      exit_flag = ChooseItemFromFirstPart();
+    }
+}
+
+bool ConsoleInterface::ChooseItemFromFirstPart()
+{
+  
+}
+                                    

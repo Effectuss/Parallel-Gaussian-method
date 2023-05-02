@@ -5,28 +5,24 @@
 #include <iostream>
 #include <vector>
 #include "../gauss_solver/gauss_solver.h"
+#include "../utils/timer.h"
+#include "../gauss_solver/linear_system.h"
 
 class ConsoleInterface {
     public:
-    using Matrix = std::vector<std::vector<double>>;
-    ConsoleInterface(){
-        int item;
-        std::cout << menu_items_[0];
-        std::cin >> item;
-        system("clear");
-        std::cout << menu_items_[1];
-        std::cin >> item;
-        system("clear");
-        std::cout << menu_items_[2];
-    }
-    private:
+    void RunConsoleApp();
 
-    enum MenuSteps {kInitMatrix, kNumberOfExec, kSolvingPart};
+    private:
+    bool ChooseItemFromFirstPart();
+
+    enum MenuSteps {kCreateSLE = 0, kNumberOfExec, kSolvingPart};
 
     static const std::vector<std::string> menu_items_;
 
-    Matrix augmented_matrix_;
-    
+    LinearSystem augmented_matrix_;
+    Timer timer_parallel_gauss_;
+    Timer timer_usual_gauss_;
+
 };
 
 #endif // _INTERFACE_CONSOLE_INTERFACE_H_
