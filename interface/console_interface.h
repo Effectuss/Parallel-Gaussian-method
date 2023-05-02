@@ -3,13 +3,30 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include "../gauss_solver/gauss_solver.h"
 
-class ConsoleInterface{
+class ConsoleInterface {
     public:
-    ConsoleInterface() {
-        std::cout << main_menu_;
+    using Matrix = std::vector<std::vector<double>>;
+    ConsoleInterface(){
+        int item;
+        std::cout << menu_items_[0];
+        std::cin >> item;
+        system("clear");
+        std::cout << menu_items_[1];
+        std::cin >> item;
+        system("clear");
+        std::cout << menu_items_[2];
     }
     private:
-    static const std::string main_menu_;
+
+    enum MenuSteps {kInitMatrix, kNumberOfExec, kSolvingPart};
+
+    static const std::vector<std::string> menu_items_;
+
+    Matrix augmented_matrix_;
+    
 };
+
 #endif // _INTERFACE_CONSOLE_INTERFACE_H_
