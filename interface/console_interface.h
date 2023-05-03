@@ -4,22 +4,24 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "../gauss_solver/gauss_solver.h"
 #include "../utils/timer.h"
-#include "../gauss_solver/linear_system.h"
+#include "../linear_equation_solver/system_of_linear_equations.h"
 
 class ConsoleInterface {
     public:
     void RunConsoleApp();
 
     private:
-    bool ChooseItemFromFirstPart();
+    bool SelectItemFromCreateSLEPart();
+    int ReadMenuOption(const std::string &current_part_);
+    void ClearConsole();
 
     enum MenuSteps {kCreateSLE = 0, kNumberOfExec, kSolvingPart};
+    enum ItemsForCreateSLEPart {kExit, kConsoleInput, kLoadFromFile, kGenerateRandom};
 
     static const std::vector<std::string> menu_items_;
 
-    LinearSystem augmented_matrix_;
+    SystemOfLinearEquations linear_equations_;
     Timer timer_parallel_gauss_;
     Timer timer_usual_gauss_;
 
