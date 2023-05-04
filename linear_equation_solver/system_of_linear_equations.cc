@@ -54,7 +54,7 @@ void SystemOfLinearEquations::GenerateAugmentedMatrix() {
 }
 
 void SystemOfLinearEquations::PrintSystemOfLinearEquations() {
-  std::cout << "\n\u001b[42;1mENTER AUGMENTED MATRIX DIMENSION: \u001b[0m\n";
+  std::cout << "\n\u001b[42;1mTHE CURRENT AUGMENTED MATRIX: \u001b[0m\n";
   for (int i = 0; i < rows_augmented_matrix_; ++i) {
     for (int j = 0; j < cols_augmented_matrix_; ++j) {
       if (j == cols_augmented_matrix_ - 2) {

@@ -2,6 +2,6 @@
 
 int main() {
   ConsoleInterface interface;
-  interface.StartConsoleApp();
+  interface.Exec();
   return 0;
 }

@@ -10,17 +10,23 @@
 
 class ConsoleInterface {
  public:
-  void StartConsoleApp();
+  void Exec();
 
  private:
+  void StartFirstPartMenu();
   bool SelectItemForFirstPartMenu();
-  bool SelectItemForSecondPartMenu();
-  void PrintWrongInput(const std::string& current_part_);
-  int ReadMenuOption(const std::string& current_part_);
-  void ClearConsole();
   std::string ReadFullPathToFile();
-  bool StartSecondPartOfMenu();
+
+  bool StartSecondPartMenu();
+  bool SelectItemForSecondPartMenu();
   void ReadNumberOfExecution();
+
+  bool StartThirdPartMenu();
+
+  void PrintWrongInput(const std::string& current_part_);
+  void ClearCin();
+  void ClearConsole();
+  int ReadMenuOption(const std::string& current_part_);
 
   enum MenuSteps { kFirstPart = 0, kSecondPart, kThirdPart };
 

@@ -52,7 +52,7 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
       break;
   }
-  exit_flag = StartSecondPartOfMenu();
+  exit_flag = StartSecondPartMenu();
   return exit_flag;
 }
 
@@ -61,17 +61,24 @@ bool ConsoleInterface::SelectItemForSecondPartMenu() {
   bool exit_flag = false;
   switch (choice) {
     case ItemsForSecondPartMenu::kReadNumberOfExec:
-      // ReadNumberOfExecution();
+      ReadNumberOfExecution();
       break;
     case ItemsForSecondPartMenu::kChangeMatrix:
+      StartFirstPartMenu();
+      exit_flag = true;
+      return exit_flag;
       break;
     case ItemsForSecondPartMenu::kPrintCurrentMatrix:
+      ClearConsole();
+      this->linear_equations_.PrintSystemOfLinearEquations();
       break;
     case kExit:
-      return true;
+      exit_flag = true;
+      return exit_flag;
     default:
       break;
   }
+  // exit_flag = StartThirdPartMenu();
   return exit_flag;
 }
 
@@ -85,8 +92,7 @@ int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
       ClearConsole();
       std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
       std::cout << current_part_;
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      ClearCin();
     }
   } while (!is_valid_input);
   return choice;
@@ -101,7 +107,7 @@ std::string ConsoleInterface::ReadFullPathToFile() {
   return file_name;
 }
 
-void ConsoleInterface::StartConsoleApp() {
+void ConsoleInterface::StartFirstPartMenu() {
   bool exit_flag{false};
   while (!exit_flag) {
     ClearConsole();
@@ -110,12 +116,39 @@ void ConsoleInterface::StartConsoleApp() {
   }
 }
 
-bool ConsoleInterface::StartSecondPartOfMenu() {
+bool ConsoleInterface::StartSecondPartMenu() {
   bool exit_flag = false;
+  ClearConsole();
   while (!exit_flag) {
-    ClearConsole();
     std::cout << menu_items_[MenuSteps::kSecondPart];
     exit_flag = SelectItemForSecondPartMenu();
   }
   return exit_flag;
 }
+
+void ConsoleInterface::ReadNumberOfExecution() {
+  bool valid_input = false;
+  ClearConsole();
+  do {
+    std::cout << "\n\u001b[42;1mENTER NUMBER OF EXECUTIONS (1 - 10000): "
+                 "\u001b[0m\n> ";
+    std::cin >> number_of_exec_;
+    if (std::cin.peek() == '\n' && number_of_exec_ >= 1 &&
+        number_of_exec_ <= 10000) {
+      valid_input = true;
+    } else {
+      ClearConsole();
+      ClearCin();
+      std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
+    }
+  } while (!valid_input);
+}
+
+// bool ConsoleInterface::StartThirdPartMenu() {}
+
+void ConsoleInterface::ClearCin() {
+  std::cin.clear();
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+void ConsoleInterface::Exec() { StartFirstPartMenu(); }
