@@ -11,8 +11,6 @@
 
 class SystemOfLinearEquations {
  public:
-  using Matrix = std::vector<std::vector<double> >;
-
   SystemOfLinearEquations() = default;
   SystemOfLinearEquations(int amount_variable, int equations);
 
@@ -25,6 +23,8 @@ class SystemOfLinearEquations {
   bool IsCompabilitySystem();
 
  private:
+  using Matrix = std::vector<std::vector<double> >;
+
   void CreateCoefficientMantrixAndVectorOfConstants();
   void ReadIndexForAugmentedMatrixFromConsole();
   void ResizeAugmentedMatrix();

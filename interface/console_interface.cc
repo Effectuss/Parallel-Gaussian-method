@@ -50,6 +50,7 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       break;
     default:
       std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
+      return false;
       break;
   }
   exit_flag = StartSecondPartMenu();
@@ -86,7 +87,8 @@ int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
   int choice{};
   bool is_valid_input{false};
   do {
-    if ((std::cin >> choice) && choice >= 0) {
+    std::cin >> choice;
+    if (std::cin.peek() == '\n' && choice >= 0) {
       is_valid_input = true;
     } else {
       ClearConsole();
