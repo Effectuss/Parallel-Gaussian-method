@@ -25,45 +25,54 @@ const std::vector<std::string> ConsoleInterface::menu_items_{
     0. Exit\033[0m\n\u001b[42;1m                    \
                                       \u001b[0m\n\n> "};
 
-void ConsoleInterface::StartConsoleApp() {
-  ClearConsole();
-  bool exit_flag{false};
-  while (!exit_flag) {
-    std::cout << menu_items_[MenuSteps::kFirstPart];
-    exit_flag = SelectItemFromFirstPart();
-  }
-}
-
-bool ConsoleInterface::SelectItemFromFirstPart() {
+bool ConsoleInterface::SelectItemForFirstPartMenu() {
   int choice = ReadMenuOption(menu_items_[MenuSteps::kFirstPart]);
+  bool exit_flag = false;
+  ClearConsole();
   switch (choice) {
-    case ItemsForCreateSLEPart::kConsoleInput:
-      ClearConsole();
+    case ItemsForFirstPartMenu::kConsoleInput:
       this->linear_equations_.ReadAugmentedMatrixFromConsole();
       break;
-    case ItemsForCreateSLEPart::kLoadFromFile:
-      ClearConsole();
+    case ItemsForFirstPartMenu::kLoadFromFile:
       try {
         std::string file_name = ReadFullPathToFile();
         this->linear_equations_.ReadAugmentedMatrixFromFile(file_name);
       } catch (const std::logic_error& er) {
-        ClearConsole();
         std::cout << "\u001b[41;1m" << er.what() << "\u001b[0m";
         return false;
       }
       break;
-    case ItemsForCreateSLEPart::kGenerateRandom:
-      ClearConsole();
+    case ItemsForFirstPartMenu::kGenerateRandom:
       this->linear_equations_.GenerateAugmentedMatrix();
       break;
-    case ItemsForCreateSLEPart::kExit:
+    case kExit:
       return true;
       break;
     default:
+      std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
       break;
   }
-  // StartSecondPartOfMenu();
-  return false;
+  exit_flag = StartSecondPartOfMenu();
+  return exit_flag;
+}
+
+bool ConsoleInterface::SelectItemForSecondPartMenu() {
+  int choice = ReadMenuOption(menu_items_[MenuSteps::kSecondPart]);
+  bool exit_flag = false;
+  switch (choice) {
+    case ItemsForSecondPartMenu::kReadNumberOfExec:
+      // ReadNumberOfExecution();
+      break;
+    case ItemsForSecondPartMenu::kChangeMatrix:
+      break;
+    case ItemsForSecondPartMenu::kPrintCurrentMatrix:
+      break;
+    case kExit:
+      return true;
+    default:
+      break;
+  }
+  return exit_flag;
 }
 
 int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
@@ -92,7 +101,21 @@ std::string ConsoleInterface::ReadFullPathToFile() {
   return file_name;
 }
 
-void ConsoleInterface::StartSecondPartOfMenu() {
-  ClearConsole();
-  std::cout << menu_items_[MenuSteps::kSecondPart];
+void ConsoleInterface::StartConsoleApp() {
+  bool exit_flag{false};
+  while (!exit_flag) {
+    ClearConsole();
+    std::cout << menu_items_[MenuSteps::kFirstPart];
+    exit_flag = SelectItemForFirstPartMenu();
+  }
+}
+
+bool ConsoleInterface::StartSecondPartOfMenu() {
+  bool exit_flag = false;
+  while (!exit_flag) {
+    ClearConsole();
+    std::cout << menu_items_[MenuSteps::kSecondPart];
+    exit_flag = SelectItemForSecondPartMenu();
+  }
+  return exit_flag;
 }

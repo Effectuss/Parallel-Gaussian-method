@@ -13,26 +13,36 @@ class ConsoleInterface {
   void StartConsoleApp();
 
  private:
-  bool SelectItemFromFirstPart();
-  int ReadMenuOption(const std::string &current_part_);
+  bool SelectItemForFirstPartMenu();
+  bool SelectItemForSecondPartMenu();
+  void PrintWrongInput(const std::string& current_part_);
+  int ReadMenuOption(const std::string& current_part_);
   void ClearConsole();
   std::string ReadFullPathToFile();
-  void StartSecondPartOfMenu();
+  bool StartSecondPartOfMenu();
+  void ReadNumberOfExecution();
 
   enum MenuSteps { kFirstPart = 0, kSecondPart, kThirdPart };
 
-  enum ItemsForCreateSLEPart {
-    kExit,
-    kConsoleInput,
+  enum ItemsForFirstPartMenu {
+    kConsoleInput = 1,
     kLoadFromFile,
     kGenerateRandom
   };
 
+  enum ItemsForSecondPartMenu {
+    kReadNumberOfExec = 1,
+    kChangeMatrix,
+    kPrintCurrentMatrix
+  };
+
   static const std::vector<std::string> menu_items_;
+  static constexpr int kExit = 0;
 
   SystemOfLinearEquations linear_equations_;
   Timer timer_parallel_gauss_;
   Timer timer_usual_gauss_;
+  int number_of_exec_;
 };
 
 #endif  // _INTERFACE_CONSOLE_INTERFACE_H_
