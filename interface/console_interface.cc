@@ -41,9 +41,12 @@ bool ConsoleInterface::SelectItemFromCreateSLEPart() {
       this->linear_equations_.ReadAugmentedMatrixFromConsole();
       break;
     case ItemsForCreateSLEPart::kLoadFromFile:
+      ClearConsole();
+      
       this->linear_equations_.ReadAugmentedMatrixFromFile();
       break;
     case ItemsForCreateSLEPart::kGenerateRandom:
+      ClearConsole();
       this->linear_equations_.GenerateAugmentedMatrix();
       break;
     case ItemsForCreateSLEPart::kExit:

@@ -2,6 +2,7 @@
 #define _LINEAR_EQUATION_SOLVER_SYSTEM_OF_LINEAR_EQUATIONS_H_
 
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -14,16 +15,21 @@ class SystemOfLinearEquations {
   SystemOfLinearEquations() = default;
   SystemOfLinearEquations(int amount_variable, int equations);
 
-  void ReadAugmentedMatrixFromFile();
+  // ?
+  void ReadAugmentedMatrixFromFile(const std::string& filename);
+
   void ReadAugmentedMatrixFromConsole();
   void GenerateAugmentedMatrix();
   void PrintSystemOfLinearEquations();
+
+  // ?
   bool IsCompabilitySystem();
 
  private:
   void CreateCoefficientMantrixAndVectorOfConstants();
   void ClearAndIgnoreCin();
   void ReadIndexForAugmentedMatrix();
+  void ResizeAugmentedMatrix();
 
   int rows_augmented_matrix_;
   int cols_augmented_matrix_;
