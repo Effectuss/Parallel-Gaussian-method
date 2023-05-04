@@ -4,16 +4,17 @@ const std::vector<std::string> ConsoleInterface::menu_items_{
     "\n\u001b[42;1m              \
     CHOOSE AN OPTION:                     \u001b[0m\n \
     \033[39m\033[1;29m1. Enter data matrix description the SLE from the keyboard\n \
-    2. Load data matrix the SLE from file\n \
+    2. Load data matrix for SLE from file\n \
     3. Generate random data matrix for SLE\n \
     0. Exit\033[0m\n\u001b[42;1m                    \
-                                      \u001b[0m\n\n> ",
+                                      \u001b[0m\n> ",
     "\n\u001b[42;1m              \
     CHOOSE AN OPTION:                     \u001b[0m\n \
     \033[39m\033[1;29m1. Sets the number of algorithm executions\n \
     2. Change data matrix description the SLE\n \
+    3. Print current augmented matrix\n \
     0. Exit\033[0m\n\u001b[42;1m                    \
-                                      \u001b[0m\n\n> ",
+                                      \u001b[0m\n> ",
     "\n\u001b[42;1m             \
     CHOOSE AN OPTION:                     \u001b[0m\n \
     \033[39m\033[1;29m1. Parallel algorithm for solving a SLE\n \
@@ -24,17 +25,17 @@ const std::vector<std::string> ConsoleInterface::menu_items_{
     0. Exit\033[0m\n\u001b[42;1m                    \
                                       \u001b[0m\n\n> "};
 
-void ConsoleInterface::RunConsoleApp() {
+void ConsoleInterface::StartConsoleApp() {
   ClearConsole();
   bool exit_flag{false};
   while (!exit_flag) {
-    std::cout << menu_items_[MenuSteps::kCreateSLE];
-    exit_flag = SelectItemFromCreateSLEPart();
+    std::cout << menu_items_[MenuSteps::kFirstPart];
+    exit_flag = SelectItemFromFirstPart();
   }
 }
 
-bool ConsoleInterface::SelectItemFromCreateSLEPart() {
-  int choice = ReadMenuOption(menu_items_[MenuSteps::kCreateSLE]);
+bool ConsoleInterface::SelectItemFromFirstPart() {
+  int choice = ReadMenuOption(menu_items_[MenuSteps::kFirstPart]);
   switch (choice) {
     case ItemsForCreateSLEPart::kConsoleInput:
       ClearConsole();
@@ -42,8 +43,14 @@ bool ConsoleInterface::SelectItemFromCreateSLEPart() {
       break;
     case ItemsForCreateSLEPart::kLoadFromFile:
       ClearConsole();
-      
-      this->linear_equations_.ReadAugmentedMatrixFromFile();
+      try {
+        std::string file_name = ReadFullPathToFile();
+        this->linear_equations_.ReadAugmentedMatrixFromFile(file_name);
+      } catch (const std::logic_error& er) {
+        ClearConsole();
+        std::cout << "\u001b[41;1m" << er.what() << "\u001b[0m";
+        return false;
+      }
       break;
     case ItemsForCreateSLEPart::kGenerateRandom:
       ClearConsole();
@@ -55,10 +62,11 @@ bool ConsoleInterface::SelectItemFromCreateSLEPart() {
     default:
       break;
   }
+  // StartSecondPartOfMenu();
   return false;
 }
 
-int ConsoleInterface::ReadMenuOption(const std::string &current_part_) {
+int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
   int choice{};
   bool is_valid_input{false};
   do {
@@ -76,3 +84,15 @@ int ConsoleInterface::ReadMenuOption(const std::string &current_part_) {
 }
 
 void ConsoleInterface::ClearConsole() { system("clear"); }
+
+std::string ConsoleInterface::ReadFullPathToFile() {
+  std::string file_name;
+  std::cout << "\n\u001b[42;1mENTER FULL PATH TO FILE WITH SLE: \u001b[0m\n> ";
+  std::cin >> file_name;
+  return file_name;
+}
+
+void ConsoleInterface::StartSecondPartOfMenu() {
+  ClearConsole();
+  std::cout << menu_items_[MenuSteps::kSecondPart];
+}

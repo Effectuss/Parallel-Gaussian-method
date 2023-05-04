@@ -10,15 +10,17 @@
 
 class ConsoleInterface {
  public:
-  void RunConsoleApp();
+  void StartConsoleApp();
 
  private:
-  bool SelectItemFromCreateSLEPart();
+  bool SelectItemFromFirstPart();
   int ReadMenuOption(const std::string &current_part_);
   void ClearConsole();
+  std::string ReadFullPathToFile();
+  void StartSecondPartOfMenu();
 
-  enum MenuSteps { kCreateSLE = 0, kNumberOfExec, kSolvingPart };
-  
+  enum MenuSteps { kFirstPart = 0, kSecondPart, kThirdPart };
+
   enum ItemsForCreateSLEPart {
     kExit,
     kConsoleInput,

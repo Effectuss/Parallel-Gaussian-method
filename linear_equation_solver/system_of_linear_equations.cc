@@ -1,12 +1,20 @@
 #include "system_of_linear_equations.h"
 
 void SystemOfLinearEquations::ReadAugmentedMatrixFromFile(
-    const std::string& filename) {
-      
-    }
+    const std::string& file_name) {
+  std::ifstream file(file_name);
+  if (!file.is_open()) {
+    throw std::logic_error("THE FILE DOESNT'T EXIST!");
+  } else {
+    ReadIndexForAugmentedMatrixFromFile(file);
+    ResizeAugmentedMatrix();
+    FillMatrixFromFile(file);
+  }
+  CreateCoefficientMantrixAndVectorOfConstants();
+}
 
 void SystemOfLinearEquations::ReadAugmentedMatrixFromConsole() {
-  ReadIndexForAugmentedMatrix();
+  ReadIndexForAugmentedMatrixFromConsole();
   ResizeAugmentedMatrix();
   for (int i = 0, coefficient_x = 1; i < rows_augmented_matrix_; ++i) {
     for (int j = 0; j < cols_augmented_matrix_; ++j) {
@@ -30,7 +38,7 @@ void SystemOfLinearEquations::ReadAugmentedMatrixFromConsole() {
 }
 
 void SystemOfLinearEquations::GenerateAugmentedMatrix() {
-  ReadIndexForAugmentedMatrix();
+  ReadIndexForAugmentedMatrixFromConsole();
   ResizeAugmentedMatrix();
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -46,6 +54,7 @@ void SystemOfLinearEquations::GenerateAugmentedMatrix() {
 }
 
 void SystemOfLinearEquations::PrintSystemOfLinearEquations() {
+  std::cout << "\n\u001b[42;1mENTER AUGMENTED MATRIX DIMENSION: \u001b[0m\n";
   for (int i = 0; i < rows_augmented_matrix_; ++i) {
     for (int j = 0; j < cols_augmented_matrix_; ++j) {
       if (j == cols_augmented_matrix_ - 2) {
@@ -81,7 +90,7 @@ void SystemOfLinearEquations::ClearAndIgnoreCin() {
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void SystemOfLinearEquations::ReadIndexForAugmentedMatrix() {
+void SystemOfLinearEquations::ReadIndexForAugmentedMatrixFromConsole() {
   std::cout << "\u001b[42;1mENTER AUGMENTED MATRIX DIMENSION: \u001b[0m\n> ";
   bool valid_input = false;
   do {
@@ -99,6 +108,31 @@ void SystemOfLinearEquations::ReadIndexForAugmentedMatrix() {
 void SystemOfLinearEquations::ResizeAugmentedMatrix() {
   augmented_matrix_ = std::move(Matrix(
       rows_augmented_matrix_, std::vector<double>(cols_augmented_matrix_)));
+}
+
+void SystemOfLinearEquations::ReadIndexForAugmentedMatrixFromFile(
+    std::ifstream& file) {
+  file >> rows_augmented_matrix_ >> cols_augmented_matrix_;
+  if (file.peek() != '\n' || rows_augmented_matrix_ <= 0 ||
+      cols_augmented_matrix_ <= 0) {
+    throw std::logic_error("THE FIRST LINE IN FILE INCORRECT");
+  } else {
+    file.get();
+  }
+}
+
+void SystemOfLinearEquations::FillMatrixFromFile(std::ifstream& file) {
+  for (int i = 0; i < rows_augmented_matrix_; ++i) {
+    for (int j = 0; j < cols_augmented_matrix_; ++j) {
+      file >> augmented_matrix_[i][j];
+      if (file.fail() || file.bad()) {
+        throw std::logic_error("DATA IN AUGMENTED MATRIX INCORRECT");
+      }
+    }
+  }
+  if (!file.eof()) {
+    throw std::logic_error("THE FILE HAVE INCORRECT DATA FOR AUGMENTED MATRIX");
+  }
 }
 
 SystemOfLinearEquations::SystemOfLinearEquations(int amount_variable,
