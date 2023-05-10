@@ -53,35 +53,38 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       return false;
       break;
   }
-  exit_flag = StartSecondPartMenu();
+  exit_flag = StartNeedPart(MenuSteps::kSecondPart);
   return exit_flag;
 }
 
 bool ConsoleInterface::SelectItemForSecondPartMenu() {
   int choice = ReadMenuOption(menu_items_[MenuSteps::kSecondPart]);
   bool exit_flag = false;
+  ClearConsole();
   switch (choice) {
     case ItemsForSecondPartMenu::kReadNumberOfExec:
       ReadNumberOfExecution();
       break;
     case ItemsForSecondPartMenu::kChangeMatrix:
-      StartFirstPartMenu();
-      exit_flag = true;
-      return exit_flag;
+      StartNeedPart(MenuSteps::kFirstPart);
+      return true;
       break;
     case ItemsForSecondPartMenu::kPrintCurrentMatrix:
-      ClearConsole();
       this->linear_equations_.PrintSystemOfLinearEquations();
+      return false;
       break;
     case kExit:
-      exit_flag = true;
-      return exit_flag;
+      return true;
     default:
+      std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
+      return false;
       break;
   }
-  // exit_flag = StartThirdPartMenu();
+  exit_flag = StartNeedPart(MenuSteps::kThirdPart);
   return exit_flag;
 }
+
+
 
 int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
   int choice{};
@@ -109,24 +112,17 @@ std::string ConsoleInterface::ReadFullPathToFile() {
   return file_name;
 }
 
-void ConsoleInterface::StartFirstPartMenu() {
+bool ConsoleInterface::StartNeedPart(ConsoleInterface::MenuSteps menu_step) {
   bool exit_flag{false};
-  while (!exit_flag) {
-    ClearConsole();
-    std::cout << menu_items_[MenuSteps::kFirstPart];
-    exit_flag = SelectItemForFirstPartMenu();
-  }
-}
-
-bool ConsoleInterface::StartSecondPartMenu() {
-  bool exit_flag = false;
   ClearConsole();
   while (!exit_flag) {
-    std::cout << menu_items_[MenuSteps::kSecondPart];
-    exit_flag = SelectItemForSecondPartMenu();
+    std::cout << menu_items_[menu_step];
+    exit_flag = func_for_need_part.at(menu_step)();
   }
   return exit_flag;
 }
+
+bool ConsoleInterface::SelectedItemForThirdPartMenu() { return false; }
 
 void ConsoleInterface::ReadNumberOfExecution() {
   bool valid_input = false;
@@ -146,11 +142,21 @@ void ConsoleInterface::ReadNumberOfExecution() {
   } while (!valid_input);
 }
 
-// bool ConsoleInterface::StartThirdPartMenu() {}
-
 void ConsoleInterface::ClearCin() {
   std::cin.clear();
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void ConsoleInterface::Exec() { StartFirstPartMenu(); }
+void ConsoleInterface::Exec() { StartNeedPart(MenuSteps::kFirstPart); }
+
+void ConsoleInterface::InitMenuFunctional() {
+  this->func_for_need_part = {
+      {MenuSteps::kFirstPart,
+       std::bind(&ConsoleInterface::SelectItemForFirstPartMenu, this)},
+      {MenuSteps::kSecondPart,
+       std::bind(&ConsoleInterface::SelectItemForSecondPartMenu, this)},
+      {MenuSteps::kThirdPart,
+       std::bind(&ConsoleInterface::SelectedItemForThirdPartMenu, this)}};
+}
+
+ConsoleInterface::ConsoleInterface() { InitMenuFunctional(); }

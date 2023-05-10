@@ -1,7 +1,9 @@
 #ifndef _INTERFACE_CONSOLE_INTERFACE_H_
 #define _INTERFACE_CONSOLE_INTERFACE_H_
 
+#include <functional>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -10,25 +12,12 @@
 
 class ConsoleInterface {
  public:
+  ConsoleInterface();
+
   void Exec();
 
  private:
-  void StartFirstPartMenu();
-  bool SelectItemForFirstPartMenu();
-  std::string ReadFullPathToFile();
-
-  bool StartSecondPartMenu();
-  bool SelectItemForSecondPartMenu();
-  void ReadNumberOfExecution();
-
-  bool StartThirdPartMenu();
-
-  void PrintWrongInput(const std::string& current_part_);
-  void ClearCin();
-  void ClearConsole();
-  int ReadMenuOption(const std::string& current_part_);
-
-  enum MenuSteps { kFirstPart = 0, kSecondPart, kThirdPart };
+  enum MenuSteps { kFirstPart, kSecondPart, kThirdPart };
 
   enum ItemsForFirstPartMenu {
     kConsoleInput = 1,
@@ -42,9 +31,27 @@ class ConsoleInterface {
     kPrintCurrentMatrix
   };
 
-  static const std::vector<std::string> menu_items_;
-  static constexpr int kExit = 0;
+  void InitMenuFunctional();
 
+  bool StartNeedPart(MenuSteps menu_step);
+
+  bool SelectItemForFirstPartMenu();
+  std::string ReadFullPathToFile();
+
+  bool SelectItemForSecondPartMenu();
+  void ReadNumberOfExecution();
+
+  bool SelectedItemForThirdPartMenu();
+
+  void PrintWrongInput(const std::string& current_part_);
+  void ClearCin();
+  void ClearConsole();
+  int ReadMenuOption(const std::string& current_part_);
+
+  static constexpr int kExit = 0;
+  static const std::vector<std::string> menu_items_;
+
+  std::map<MenuSteps, std::function<bool(void)>> func_for_need_part;
   SystemOfLinearEquations linear_equations_;
   Timer timer_parallel_gauss_;
   Timer timer_usual_gauss_;
