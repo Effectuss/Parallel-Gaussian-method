@@ -28,22 +28,28 @@ class ConsoleInterface {
   enum ItemsForSecondPartMenu {
     kReadNumberOfExec = 1,
     kChangeMatrix,
-    kPrintCurrentMatrix
+    kPrintCurrentSLE
+  };
+
+  enum ItemsForThirdPartMenu {
+    kParallelAlgo = 1,
+    kUsualAlgo,
+    kPrintResultAndSLE,
+    kCompareTime,
+    kChangeSLE,
+    kChangeNumberOfExec
   };
 
   void InitMenuFunctional();
 
   bool StartNeedPart(MenuSteps menu_step);
-
   bool SelectItemForFirstPartMenu();
   std::string ReadFullPathToFile();
-
   bool SelectItemForSecondPartMenu();
   void ReadNumberOfExecution();
-
   bool SelectedItemForThirdPartMenu();
 
-  void PrintWrongInput(const std::string& current_part_);
+  // void PrintWrongInput(const std::string& current_part_);
   void ClearCin();
   void ClearConsole();
   int ReadMenuOption(const std::string& current_part_);
@@ -55,7 +61,7 @@ class ConsoleInterface {
   SystemOfLinearEquations linear_equations_;
   Timer timer_parallel_gauss_;
   Timer timer_usual_gauss_;
-  int number_of_exec_;
+  int number_of_exec_ = 0;
 };
 
 #endif  // _INTERFACE_CONSOLE_INTERFACE_H_

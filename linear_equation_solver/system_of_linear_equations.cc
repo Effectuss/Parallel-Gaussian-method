@@ -49,7 +49,6 @@ void SystemOfLinearEquations::GenerateAugmentedMatrix() {
       augmented_matrix_[i][j] = dis(gen);
     }
   }
-  PrintSystemOfLinearEquations();
   CreateCoefficientMantrixAndVectorOfConstants();
 }
 

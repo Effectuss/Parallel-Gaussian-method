@@ -17,18 +17,21 @@ const std::vector<std::string> ConsoleInterface::menu_items_{
                                       \u001b[0m\n> ",
     "\n\u001b[42;1m             \
     CHOOSE AN OPTION:                     \u001b[0m\n \
-    \033[39m\033[1;29m1. Parallel algorithm for solving a SLE\n \
-    2. Usual algorithm for solving a SLE\n \
-    3. Compare time of execution\n \
-    4. Change data matrix description the SLE\n \
-    5. Change the number of algorithm executions\n \
+    \033[39m\033[1;29m1. Parallel algorithm for solving the SLE\n \
+    2. Usual algorithm for solving the SLE\n \
+    3. Print current augmented matrix and result the SLE\n \
+    4. Compare time of execution\n \
+    5. Change data matrix description the SLE\n \
+    6. Change the number of algorithm executions\n \
     0. Exit\033[0m\n\u001b[42;1m                    \
-                                      \u001b[0m\n\n> "};
+                                      \u001b[0m\n> "};
 
 bool ConsoleInterface::SelectItemForFirstPartMenu() {
   int choice = ReadMenuOption(menu_items_[MenuSteps::kFirstPart]);
   bool exit_flag = false;
+  MenuSteps next_step = MenuSteps::kSecondPart;
   ClearConsole();
+
   switch (choice) {
     case ItemsForFirstPartMenu::kConsoleInput:
       this->linear_equations_.ReadAugmentedMatrixFromConsole();
@@ -53,7 +56,14 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       return false;
       break;
   }
-  exit_flag = StartNeedPart(MenuSteps::kSecondPart);
+
+  
+
+  if (number_of_exec_ > 0) {
+    next_step = MenuSteps::kThirdPart;
+  }
+
+  exit_flag = StartNeedPart(next_step);
   return exit_flag;
 }
 
@@ -64,27 +74,52 @@ bool ConsoleInterface::SelectItemForSecondPartMenu() {
   switch (choice) {
     case ItemsForSecondPartMenu::kReadNumberOfExec:
       ReadNumberOfExecution();
+      exit_flag = StartNeedPart(MenuSteps::kThirdPart);
       break;
     case ItemsForSecondPartMenu::kChangeMatrix:
-      StartNeedPart(MenuSteps::kFirstPart);
-      return true;
+      exit_flag = StartNeedPart(MenuSteps::kFirstPart);
       break;
-    case ItemsForSecondPartMenu::kPrintCurrentMatrix:
+    case ItemsForSecondPartMenu::kPrintCurrentSLE:
       this->linear_equations_.PrintSystemOfLinearEquations();
-      return false;
       break;
     case kExit:
       return true;
     default:
       std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
-      return false;
       break;
   }
-  exit_flag = StartNeedPart(MenuSteps::kThirdPart);
   return exit_flag;
 }
 
+bool ConsoleInterface::SelectedItemForThirdPartMenu() {
+  int choice = ReadMenuOption(menu_items_[MenuSteps::kThirdPart]);
+  bool exit_flag = false;
+  ClearConsole();
+  switch (choice) {
+    case ItemsForThirdPartMenu::kParallelAlgo:
+      break;
+    case ItemsForThirdPartMenu::kUsualAlgo:
 
+      break;
+    case ItemsForThirdPartMenu::kPrintResultAndSLE:
+      break;
+    case ItemsForThirdPartMenu::kCompareTime:
+      break;
+    case ItemsForThirdPartMenu::kChangeSLE:
+      exit_flag = StartNeedPart(MenuSteps::kFirstPart);
+      break;
+    case ItemsForThirdPartMenu::kChangeNumberOfExec:
+      ReadNumberOfExecution();
+      break;
+    case kExit:
+      exit_flag = true;
+      break;
+    default:
+      std::cout << "\u001b[41;1mWRONG INPUT!\u001b[0m";
+      break;
+  }
+  return exit_flag;
+}
 
 int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
   int choice{};
@@ -121,8 +156,6 @@ bool ConsoleInterface::StartNeedPart(ConsoleInterface::MenuSteps menu_step) {
   }
   return exit_flag;
 }
-
-bool ConsoleInterface::SelectedItemForThirdPartMenu() { return false; }
 
 void ConsoleInterface::ReadNumberOfExecution() {
   bool valid_input = false;
