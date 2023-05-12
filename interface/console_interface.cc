@@ -55,7 +55,6 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
   bool exit_flag = false;
   MenuSteps next_step = MenuSteps::kSecondPart;
   ClearConsole();
-
   switch (choice) {
     case ItemsForFirstPartMenu::kConsoleInput:
       this->linear_equations_.ReadAugmentedMatrixFromConsole();
@@ -81,16 +80,18 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       break;
   }
 
-  if (number_of_exec_ > 0) {
-    next_step = MenuSteps::kThirdPart;
+  if (linear_equations_.IsLinearSystemCompatible()) {
+    if (number_of_exec_ > 0) next_step = MenuSteps::kThirdPart;
+    exit_flag = StartNeedPart(next_step);
+  } else {
+    ClearConsole();
+    std::cout << "\u001b[41;1mTHE SYSTEM OF LINEAR EQUATIONS ISN'T "
+                 "COMPATIBLE\u001b[0m";
   }
-
-  exit_flag = StartNeedPart(next_step);
   return exit_flag;
 }
 
 bool ConsoleInterface::SelectItemForSecondPartMenu() {
-  linear_equations_.IsLinearSystemCompatible();
   int choice = ReadMenuOption(menu_items_[MenuSteps::kSecondPart]);
   bool exit_flag = false;
   ClearConsole();

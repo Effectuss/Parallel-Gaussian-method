@@ -103,7 +103,6 @@ int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
       }
     }
 
-    // Увеличиваем ранг на 1
     ++rank;
   }
 
@@ -111,13 +110,14 @@ int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
 }
 
 bool SystemOfLinearEquations::IsLinearSystemCompatible() {
-  // int rank_augmented = FindRankOfMatrix(augmented_matrix_);
-  // int rank_coefficient = FindRankOfMatrix(coefficient_matrix_);
-
-  // int amount_variable = coefficient_matrix_.at(0).size();
-  int rank = FindRankOfMatrix(this->augmented_matrix_);
-  std::cout << rank;
-  return true;
+  if (!augmented_matrix_.empty()) {
+    int amount_variable = augmented_matrix_.at(0).size() - 1;
+    int amount_equations = augmented_matrix_.size();
+    return !(amount_equations < amount_variable) &&
+           SystemOfLinearEquations::FindRankOfMatrix(augmented_matrix_) ==
+               SystemOfLinearEquations::FindRankOfMatrix(coefficient_matrix_);
+  }
+  return false;
 }
 
 std::vector<double> SystemOfLinearEquations::SolveUsualGauss() {
@@ -127,7 +127,7 @@ std::vector<double> SystemOfLinearEquations::SolveUsualGauss() {
 }
 
 void SystemOfLinearEquations::CreateCoefficientMantrixAndVectorOfConstants() {
-  if (vector_of_constants_.empty() && coefficient_matrix_.empty()) {
+  if (augmented_matrix_.empty()) {
     return;
   } else {
     coefficient_matrix_.resize(rows_augmented_matrix_);
