@@ -36,7 +36,6 @@ class SystemOfLinearEquations {
   // Methods for work with file
   void ReadIndexForAugmentedMatrixFromFile(std::ifstream& file);
   void FillMatrixFromFile(std::ifstream& file);
-
   void ClearAndIgnoreCin();
 
   static constexpr double kEPS = 1e-6;

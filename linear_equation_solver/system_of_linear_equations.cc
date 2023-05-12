@@ -73,7 +73,7 @@ int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
 
   for (int j = 0; j < cols; ++j) {
     int pivot_row = -1;
-    // Находим строку с максимальным по модулю элементом в столбце j
+    // Find the row with the modulo maximum element in column j
     double max_value = 0.0;
     for (int i = rank; i < rows; ++i) {
       double abs_value = fabs(matrix[i][j]);
@@ -84,22 +84,21 @@ int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
     }
 
     if (pivot_row == -1 || max_value < kEPS) {
-      // Если все элементы ниже строки `rank` в столбце равны нулю,
-      // переходим к следующему столбцу.
+      // If all elements below the `rank` line in the column are zero,
+      // move on to the next column.
       continue;
     }
 
-    // Меняем местами `rank`-ую и `pivot_row`-ую строки
     std::swap(matrix[rank], matrix[pivot_row]);
 
-    // Сокращаем все последующие строки под `rank`-ой строкой
+    // Reduce all subsequent lines below the `rank` line
     double pivot_value = matrix[rank][j];
     for (int i = rank + 1; i < rows; ++i) {
-      double coeff = matrix[i][j] / pivot_value;
+      double coeff = (-matrix[i][j]) / pivot_value;
       matrix[i][j] = 0.0;
 
       for (int k = j + 1; k < cols; ++k) {
-        matrix[i][k] -= coeff * matrix[rank][k];
+        matrix[i][k] += coeff * matrix[rank][k];
       }
     }
 
@@ -122,7 +121,7 @@ bool SystemOfLinearEquations::IsLinearSystemCompatible() {
 
 std::vector<double> SystemOfLinearEquations::SolveUsualGauss() {
   std::vector<double> result;
-
+  
   return result;
 }
 
