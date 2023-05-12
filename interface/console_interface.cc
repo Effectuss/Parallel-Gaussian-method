@@ -19,12 +19,36 @@ const std::vector<std::string> ConsoleInterface::menu_items_{
     CHOOSE AN OPTION:                     \u001b[0m\n \
     \033[39m\033[1;29m1. Parallel algorithm for solving the SLE\n \
     2. Usual algorithm for solving the SLE\n \
-    3. Print current augmented matrix and result the SLE\n \
-    4. Compare time of execution\n \
-    5. Change data matrix description the SLE\n \
-    6. Change the number of algorithm executions\n \
+    3. Print current augmented matrix\n \
+    4. Print result parallel algoritm\n \
+    5. Print result usual algorithm\n \
+    6. Compare time of execution\n \
+    7. Change data matrix description the SLE\n \
+    8. Change the number of algorithm executions\n \
     0. Exit\033[0m\n\u001b[42;1m                    \
                                       \u001b[0m\n> "};
+
+ConsoleInterface::ConsoleInterface() { InitMenuFunctional(); }
+
+void ConsoleInterface::InitMenuFunctional() {
+  this->func_for_need_part = {
+      {MenuSteps::kFirstPart,
+       std::bind(&ConsoleInterface::SelectItemForFirstPartMenu, this)},
+      {MenuSteps::kSecondPart,
+       std::bind(&ConsoleInterface::SelectItemForSecondPartMenu, this)},
+      {MenuSteps::kThirdPart,
+       std::bind(&ConsoleInterface::SelectedItemForThirdPartMenu, this)}};
+}
+
+bool ConsoleInterface::StartNeedPart(ConsoleInterface::MenuSteps menu_step) {
+  bool exit_flag{false};
+  ClearConsole();
+  while (!exit_flag) {
+    std::cout << menu_items_[menu_step];
+    exit_flag = func_for_need_part.at(menu_step)();
+  }
+  return exit_flag;
+}
 
 bool ConsoleInterface::SelectItemForFirstPartMenu() {
   int choice = ReadMenuOption(menu_items_[MenuSteps::kFirstPart]);
@@ -57,8 +81,6 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       break;
   }
 
-  
-
   if (number_of_exec_ > 0) {
     next_step = MenuSteps::kThirdPart;
   }
@@ -68,6 +90,7 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
 }
 
 bool ConsoleInterface::SelectItemForSecondPartMenu() {
+  linear_equations_.IsLinearSystemCompatible();
   int choice = ReadMenuOption(menu_items_[MenuSteps::kSecondPart]);
   bool exit_flag = false;
   ClearConsole();
@@ -97,13 +120,24 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
   ClearConsole();
   switch (choice) {
     case ItemsForThirdPartMenu::kParallelAlgo:
+      // ?
       break;
     case ItemsForThirdPartMenu::kUsualAlgo:
-
+      this->linear_equations_.SolveUsualGauss();
       break;
-    case ItemsForThirdPartMenu::kPrintResultAndSLE:
+    case ItemsForThirdPartMenu::kPrintSLE:
+      this->linear_equations_.PrintSystemOfLinearEquations();
+      break;
+    case ItemsForThirdPartMenu::kPrintResParallel:
+      // ?
+      PrintGaussResult(TypeOfGaussAlgo::kParallel);
+      break;
+    case ItemsForThirdPartMenu::kPrintResUsual:
+      // ?
+      PrintGaussResult(TypeOfGaussAlgo::kUsual);
       break;
     case ItemsForThirdPartMenu::kCompareTime:
+      PrintExecutionTimeOfAlgorithms();
       break;
     case ItemsForThirdPartMenu::kChangeSLE:
       exit_flag = StartNeedPart(MenuSteps::kFirstPart);
@@ -119,6 +153,20 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
       break;
   }
   return exit_flag;
+}
+
+void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
+  std::cout << "\n\u001b[42;1mALGORITHM EXECUTION TIME\u001b[0m\n";
+  std::cout << "\033[39m\033[1;29mParallel Gauss algoritm: ";
+  timer_parallel_gauss_.DisplayTimerValues();
+  std::cout << "\033[39m\033[1;29mUsual Gauss algoritm: ";
+  timer_usual_gauss_.DisplayTimerValues();
+}
+
+void ConsoleInterface::PrintGaussResult(TypeOfGaussAlgo type_of_algo) {
+  if (type_of_algo == TypeOfGaussAlgo::kParallel) {
+  } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
+  }
 }
 
 int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
@@ -147,16 +195,6 @@ std::string ConsoleInterface::ReadFullPathToFile() {
   return file_name;
 }
 
-bool ConsoleInterface::StartNeedPart(ConsoleInterface::MenuSteps menu_step) {
-  bool exit_flag{false};
-  ClearConsole();
-  while (!exit_flag) {
-    std::cout << menu_items_[menu_step];
-    exit_flag = func_for_need_part.at(menu_step)();
-  }
-  return exit_flag;
-}
-
 void ConsoleInterface::ReadNumberOfExecution() {
   bool valid_input = false;
   ClearConsole();
@@ -181,15 +219,3 @@ void ConsoleInterface::ClearCin() {
 }
 
 void ConsoleInterface::Exec() { StartNeedPart(MenuSteps::kFirstPart); }
-
-void ConsoleInterface::InitMenuFunctional() {
-  this->func_for_need_part = {
-      {MenuSteps::kFirstPart,
-       std::bind(&ConsoleInterface::SelectItemForFirstPartMenu, this)},
-      {MenuSteps::kSecondPart,
-       std::bind(&ConsoleInterface::SelectItemForSecondPartMenu, this)},
-      {MenuSteps::kThirdPart,
-       std::bind(&ConsoleInterface::SelectedItemForThirdPartMenu, this)}};
-}
-
-ConsoleInterface::ConsoleInterface() { InitMenuFunctional(); }

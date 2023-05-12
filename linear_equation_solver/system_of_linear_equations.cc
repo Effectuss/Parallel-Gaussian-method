@@ -66,6 +66,66 @@ void SystemOfLinearEquations::PrintSystemOfLinearEquations() {
   }
 }
 
+int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
+  int rows = matrix.size();
+  int cols = matrix.at(0).size();
+  int rank = 0;
+
+  for (int j = 0; j < cols; ++j) {
+    int pivot_row = -1;
+    // Находим строку с максимальным по модулю элементом в столбце j
+    double max_value = 0.0;
+    for (int i = rank; i < rows; ++i) {
+      double abs_value = fabs(matrix[i][j]);
+      if (abs_value > max_value) {
+        max_value = abs_value;
+        pivot_row = i;
+      }
+    }
+
+    if (pivot_row == -1 || max_value < kEPS) {
+      // Если все элементы ниже строки `rank` в столбце равны нулю,
+      // переходим к следующему столбцу.
+      continue;
+    }
+
+    // Меняем местами `rank`-ую и `pivot_row`-ую строки
+    std::swap(matrix[rank], matrix[pivot_row]);
+
+    // Сокращаем все последующие строки под `rank`-ой строкой
+    double pivot_value = matrix[rank][j];
+    for (int i = rank + 1; i < rows; ++i) {
+      double coeff = matrix[i][j] / pivot_value;
+      matrix[i][j] = 0.0;
+
+      for (int k = j + 1; k < cols; ++k) {
+        matrix[i][k] -= coeff * matrix[rank][k];
+      }
+    }
+
+    // Увеличиваем ранг на 1
+    ++rank;
+  }
+
+  return rank;
+}
+
+bool SystemOfLinearEquations::IsLinearSystemCompatible() {
+  // int rank_augmented = FindRankOfMatrix(augmented_matrix_);
+  // int rank_coefficient = FindRankOfMatrix(coefficient_matrix_);
+
+  // int amount_variable = coefficient_matrix_.at(0).size();
+  int rank = FindRankOfMatrix(this->augmented_matrix_);
+  std::cout << rank;
+  return true;
+}
+
+std::vector<double> SystemOfLinearEquations::SolveUsualGauss() {
+  std::vector<double> result;
+
+  return result;
+}
+
 void SystemOfLinearEquations::CreateCoefficientMantrixAndVectorOfConstants() {
   if (vector_of_constants_.empty() && coefficient_matrix_.empty()) {
     return;

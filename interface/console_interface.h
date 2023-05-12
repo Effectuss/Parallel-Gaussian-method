@@ -34,12 +34,15 @@ class ConsoleInterface {
   enum ItemsForThirdPartMenu {
     kParallelAlgo = 1,
     kUsualAlgo,
-    kPrintResultAndSLE,
+    kPrintSLE,
+    kPrintResParallel,
+    kPrintResUsual,
     kCompareTime,
     kChangeSLE,
     kChangeNumberOfExec
   };
 
+  enum TypeOfGaussAlgo { kParallel, kUsual };
   void InitMenuFunctional();
 
   bool StartNeedPart(MenuSteps menu_step);
@@ -48,8 +51,9 @@ class ConsoleInterface {
   bool SelectItemForSecondPartMenu();
   void ReadNumberOfExecution();
   bool SelectedItemForThirdPartMenu();
+  void PrintExecutionTimeOfAlgorithms();
+  void PrintGaussResult(TypeOfGaussAlgo type_of_algo);
 
-  // void PrintWrongInput(const std::string& current_part_);
   void ClearCin();
   void ClearConsole();
   int ReadMenuOption(const std::string& current_part_);
@@ -62,6 +66,8 @@ class ConsoleInterface {
   Timer timer_parallel_gauss_;
   Timer timer_usual_gauss_;
   int number_of_exec_ = 0;
+  std::vector<double> res_usual_algo_;
+  std::vector<double> res_parallel_algo_;
 };
 
 #endif  // _INTERFACE_CONSOLE_INTERFACE_H_
