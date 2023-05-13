@@ -3,14 +3,15 @@
 
 #include <vector>
 
+#include "system_of_linear_equations.h"
+
 class GaussSolver {
  public:
-  using Matrix = std::vector<std::vector<double>>;
-
+  virtual ~GaussSolver() = 0;
   // this method work only with compatible system
-  static std::vector<double> SolveUsualGauss(Matrix system);
+  static std::vector<double> SolveUsualGauss(SystemOfLinearEquations system);
   // this method work only with compatible system
-  static std::vector<double> SolveParallelGauss(Matrix system);
+  static std::vector<double> SolveParallelGauss(SystemOfLinearEquations system);
 
  private:
   static constexpr double kEPS = 1e-6;

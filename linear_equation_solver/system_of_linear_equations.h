@@ -15,6 +15,14 @@ class SystemOfLinearEquations {
 
   SystemOfLinearEquations() = default;
   SystemOfLinearEquations(int amount_variable, int equations);
+  SystemOfLinearEquations(const SystemOfLinearEquations& other_system) =
+      default;
+  SystemOfLinearEquations(SystemOfLinearEquations&& other_system) = default;
+  SystemOfLinearEquations& operator=(
+      const SystemOfLinearEquations& other_system) = default;
+  SystemOfLinearEquations& operator=(SystemOfLinearEquations&& other_system) =
+      default;
+  ~SystemOfLinearEquations() = default;
 
   const Matrix& GetAugmentedMatrix() const;
   const Matrix& GetCoefficientMatrix() const;
@@ -31,6 +39,7 @@ class SystemOfLinearEquations {
  private:
   static int FindRankOfMatrix(Matrix matrix);
 
+  bool IsEmptySystem();
   void CreateCoefficientMantrixAndVectorOfConstants();
   void ReadIndexForAugmentedMatrixFromConsole();
   void ResizeAugmentedMatrix();

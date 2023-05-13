@@ -42,8 +42,7 @@ void SystemOfLinearEquations::GenerateAugmentedMatrix() {
   ResizeAugmentedMatrix();
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> dis(
-      std::numeric_limits<double>::min(), std::numeric_limits<double>::max());
+  std::uniform_real_distribution<double> dis(-10000.0, 10000.0);
   for (int i = 0; i < rows_augmented_matrix_; ++i) {
     for (int j = 0; j < cols_augmented_matrix_; ++j) {
       augmented_matrix_[i][j] = dis(gen);
@@ -109,7 +108,7 @@ int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
 }
 
 bool SystemOfLinearEquations::IsLinearSystemCompatible() {
-  if (!augmented_matrix_.empty()) {
+  if (!IsEmptySystem()) {
     int amount_variable = augmented_matrix_.at(0).size() - 1;
     int amount_equations = augmented_matrix_.size();
     return !(amount_equations < amount_variable) &&
@@ -120,9 +119,7 @@ bool SystemOfLinearEquations::IsLinearSystemCompatible() {
 }
 
 void SystemOfLinearEquations::CreateCoefficientMantrixAndVectorOfConstants() {
-  if (augmented_matrix_.empty()) {
-    return;
-  } else {
+  if (!IsEmptySystem()) {
     coefficient_matrix_.resize(rows_augmented_matrix_);
     for (int i = 0; i < rows_augmented_matrix_; ++i) {
       for (int j = 0; j < cols_augmented_matrix_; ++j) {
@@ -157,6 +154,10 @@ int SystemOfLinearEquations::GetAmountOfEquations() const {
 
 int SystemOfLinearEquations::GetAmountOfVariable() const {
   return cols_augmented_matrix_ - 1;
+}
+
+bool SystemOfLinearEquations::IsEmptySystem() {
+  return augmented_matrix_.empty();
 }
 
 void SystemOfLinearEquations::ClearAndIgnoreCin() {

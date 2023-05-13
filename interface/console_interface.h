@@ -14,6 +14,10 @@
 class ConsoleInterface {
  public:
   ConsoleInterface();
+  ConsoleInterface(const ConsoleInterface& other) = delete;
+  ConsoleInterface(ConsoleInterface&& other) = delete;
+  ConsoleInterface& operator=(const ConsoleInterface& other) = delete;
+  ConsoleInterface& operator=(ConsoleInterface&& other) = delete;
 
   void Exec();
 

@@ -1,14 +1,19 @@
 #include "gauss_solver.h"
 
-std::vector<double> GaussSolver::SolveUsualGauss(GaussSolver::Matrix system) {
+GaussSolver::~GaussSolver() {}
+
+std::vector<double> GaussSolver::SolveUsualGauss(
+    SystemOfLinearEquations system) {
   std::vector<double> result;
-  system.at(1);
+  int equations = system.GetAmountOfEquations();
+  int variables = system.GetAmountOfVariable();
+
   return result;
 }
 
 std::vector<double> GaussSolver::SolveParallelGauss(
-    GaussSolver::Matrix system) {
+    SystemOfLinearEquations system) {
   std::vector<double> result;
-  system.at(1);
+  //   system.at(1);
   return result;
 }

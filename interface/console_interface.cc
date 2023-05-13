@@ -182,18 +182,16 @@ void ConsoleInterface::RunGaussSolver(TypeOfGaussAlgo type_of_algo) {
   if (type_of_algo == TypeOfGaussAlgo::kParallel) {
     timer_parallel_gauss_.StartTimer();
     while (n--) {
-      GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+      GaussSolver::SolveParallelGauss(linear_equations_);
     }
-    res_parallel_algo_ =
-        GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+    res_parallel_algo_ = GaussSolver::SolveParallelGauss(linear_equations_);
     timer_parallel_gauss_.EndTimer();
   } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
     timer_usual_gauss_.StartTimer();
     while (n--) {
-      GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+      GaussSolver::SolveParallelGauss(linear_equations_);
     }
-    res_usual_algo_ =
-        GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+    res_usual_algo_ = GaussSolver::SolveParallelGauss(linear_equations_);
     timer_usual_gauss_.EndTimer();
   }
 }
