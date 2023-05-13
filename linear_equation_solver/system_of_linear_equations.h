@@ -16,7 +16,11 @@ class SystemOfLinearEquations {
   SystemOfLinearEquations() = default;
   SystemOfLinearEquations(int amount_variable, int equations);
 
-  static int FindRankOfMatrix(Matrix matrix);
+  const Matrix& GetAugmentedMatrix() const;
+  const Matrix& GetCoefficientMatrix() const;
+  const std::vector<double>& GetVectorOfConstants() const;
+  int GetAmountOfEquations() const;
+  int GetAmountOfVariable() const;
 
   void ReadAugmentedMatrixFromFile(const std::string& file_name);
   void ReadAugmentedMatrixFromConsole();
@@ -24,11 +28,9 @@ class SystemOfLinearEquations {
   void PrintSystemOfLinearEquations();
   bool IsLinearSystemCompatible();
 
-  // ?
-  std::vector<double> SolveUsualGauss();
-  std::vector<double> SolveParallelGauss();
-
  private:
+  static int FindRankOfMatrix(Matrix matrix);
+
   void CreateCoefficientMantrixAndVectorOfConstants();
   void ReadIndexForAugmentedMatrixFromConsole();
   void ResizeAugmentedMatrix();

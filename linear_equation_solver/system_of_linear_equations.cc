@@ -119,12 +119,6 @@ bool SystemOfLinearEquations::IsLinearSystemCompatible() {
   return false;
 }
 
-std::vector<double> SystemOfLinearEquations::SolveUsualGauss() {
-  std::vector<double> result;
-  
-  return result;
-}
-
 void SystemOfLinearEquations::CreateCoefficientMantrixAndVectorOfConstants() {
   if (augmented_matrix_.empty()) {
     return;
@@ -140,6 +134,29 @@ void SystemOfLinearEquations::CreateCoefficientMantrixAndVectorOfConstants() {
       }
     }
   }
+}
+
+const SystemOfLinearEquations::Matrix&
+SystemOfLinearEquations::GetAugmentedMatrix() const {
+  return augmented_matrix_;
+}
+
+const SystemOfLinearEquations::Matrix&
+SystemOfLinearEquations::GetCoefficientMatrix() const {
+  return coefficient_matrix_;
+}
+
+const std::vector<double>& SystemOfLinearEquations::GetVectorOfConstants()
+    const {
+  return vector_of_constants_;
+}
+
+int SystemOfLinearEquations::GetAmountOfEquations() const {
+  return rows_augmented_matrix_;
+}
+
+int SystemOfLinearEquations::GetAmountOfVariable() const {
+  return cols_augmented_matrix_ - 1;
 }
 
 void SystemOfLinearEquations::ClearAndIgnoreCin() {

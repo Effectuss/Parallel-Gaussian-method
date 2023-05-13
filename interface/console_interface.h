@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "../linear_equation_solver/gauss_solver.h"
 #include "../linear_equation_solver/system_of_linear_equations.h"
 #include "../utils/timer.h"
 
@@ -53,6 +54,7 @@ class ConsoleInterface {
   bool SelectedItemForThirdPartMenu();
   void PrintExecutionTimeOfAlgorithms();
   void PrintGaussResult(TypeOfGaussAlgo type_of_algo);
+  void RunGaussSolver(TypeOfGaussAlgo type_of_algo);
 
   void ClearCin();
   void ClearConsole();

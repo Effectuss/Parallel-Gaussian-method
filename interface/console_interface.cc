@@ -121,20 +121,18 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
   ClearConsole();
   switch (choice) {
     case ItemsForThirdPartMenu::kParallelAlgo:
-      // ?
+      RunGaussSolver(TypeOfGaussAlgo::kParallel);
       break;
     case ItemsForThirdPartMenu::kUsualAlgo:
-      this->linear_equations_.SolveUsualGauss();
+      RunGaussSolver(TypeOfGaussAlgo::kUsual);
       break;
     case ItemsForThirdPartMenu::kPrintSLE:
       this->linear_equations_.PrintSystemOfLinearEquations();
       break;
     case ItemsForThirdPartMenu::kPrintResParallel:
-      // ?
       PrintGaussResult(TypeOfGaussAlgo::kParallel);
       break;
     case ItemsForThirdPartMenu::kPrintResUsual:
-      // ?
       PrintGaussResult(TypeOfGaussAlgo::kUsual);
       break;
     case ItemsForThirdPartMenu::kCompareTime:
@@ -166,7 +164,37 @@ void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
 
 void ConsoleInterface::PrintGaussResult(TypeOfGaussAlgo type_of_algo) {
   if (type_of_algo == TypeOfGaussAlgo::kParallel) {
+    std::cout << "\n\u001b[42;1mPARALLEL ALGORITHM RESULT\u001b[0m\n";
+    for (const auto& el : res_parallel_algo_) {
+      std::cout << "\033[39m\033[1;29m" << el << " ";
+    }
   } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
+    std::cout << "\n\u001b[42;1mUSUAL ALGORITHM RESULT\u001b[0m\n";
+    for (const auto& el : res_usual_algo_) {
+      std::cout << "\033[39m\033[1;29m" << el << " ";
+    }
+  }
+  std::cout << std::endl;
+}
+
+void ConsoleInterface::RunGaussSolver(TypeOfGaussAlgo type_of_algo) {
+  int n = number_of_exec_ - 1;
+  if (type_of_algo == TypeOfGaussAlgo::kParallel) {
+    timer_parallel_gauss_.StartTimer();
+    while (n--) {
+      GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+    }
+    res_parallel_algo_ =
+        GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+    timer_parallel_gauss_.EndTimer();
+  } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
+    timer_usual_gauss_.StartTimer();
+    while (n--) {
+      GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+    }
+    res_usual_algo_ =
+        GaussSolver::SolveParallelGauss(linear_equations_.GetAugmentedMatrix());
+    timer_usual_gauss_.EndTimer();
   }
 }
 
