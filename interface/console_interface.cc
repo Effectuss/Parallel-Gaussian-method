@@ -189,9 +189,9 @@ void ConsoleInterface::RunGaussSolver(TypeOfGaussAlgo type_of_algo) {
   } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
     timer_usual_gauss_.StartTimer();
     while (n--) {
-      GaussSolver::SolveParallelGauss(linear_equations_);
+      GaussSolver::SolveUsualGauss(linear_equations_);
     }
-    res_usual_algo_ = GaussSolver::SolveParallelGauss(linear_equations_);
+    res_usual_algo_ = GaussSolver::SolveUsualGauss(linear_equations_);
     timer_usual_gauss_.EndTimer();
   }
 }

@@ -14,6 +14,8 @@ class GaussSolver {
   static std::vector<double> SolveParallelGauss(SystemOfLinearEquations system);
 
  private:
+  using Matrix = std::vector<std::vector<double>>;
+
   static constexpr double kEPS = 1e-6;
 };
 #endif  // _LINEAR_EQUATION_SOLVER_GAUSS_SOLVER_H_

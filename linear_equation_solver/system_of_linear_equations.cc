@@ -42,7 +42,7 @@ void SystemOfLinearEquations::GenerateAugmentedMatrix() {
   ResizeAugmentedMatrix();
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<double> dis(-10000.0, 10000.0);
+  std::uniform_real_distribution<double> dis(-100000.0, 100000.0);
   for (int i = 0; i < rows_augmented_matrix_; ++i) {
     for (int j = 0; j < cols_augmented_matrix_; ++j) {
       augmented_matrix_[i][j] = dis(gen);
@@ -76,7 +76,7 @@ int SystemOfLinearEquations::FindRankOfMatrix(Matrix matrix) {
     double max_value = 0.0;
     for (int i = rank; i < rows; ++i) {
       double abs_value = fabs(matrix[i][j]);
-      if (abs_value > max_value) {
+      if (fabs(abs_value - max_value) > kEPS) {
         max_value = abs_value;
         pivot_row = i;
       }
