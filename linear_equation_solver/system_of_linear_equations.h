@@ -30,19 +30,22 @@ class SystemOfLinearEquations {
   int GetAmountOfEquations() const;
   int GetAmountOfVariable() const;
 
-  void ReadAugmentedMatrixFromFile(const std::string& file_name);
-  void ReadAugmentedMatrixFromConsole();
   void GenerateAugmentedMatrix();
   void PrintSystemOfLinearEquations();
+  void ReadAugmentedMatrixFromFile(const std::string& file_name);
+  void ReadAugmentedMatrixFromConsole();
+
   bool IsLinearSystemCompatible();
 
  private:
   static int FindRankOfMatrix(Matrix matrix);
 
   bool IsEmptySystem();
+
   void CreateCoefficientMantrixAndVectorOfConstants();
-  void ReadIndexForAugmentedMatrixFromConsole();
   void ResizeAugmentedMatrix();
+
+  void ReadIndexForAugmentedMatrixFromConsole();
 
   // Methods for work with file
   void ReadIndexForAugmentedMatrixFromFile(std::ifstream& file);

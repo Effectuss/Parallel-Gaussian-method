@@ -165,11 +165,13 @@ void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
 void ConsoleInterface::PrintGaussResult(TypeOfGaussAlgo type_of_algo) {
   if (type_of_algo == TypeOfGaussAlgo::kParallel) {
     std::cout << "\n\u001b[42;1mPARALLEL ALGORITHM RESULT\u001b[0m\n";
+    res_parallel_algo_ = GaussSolver::SolveParallelGauss(linear_equations_);
     for (const auto& el : res_parallel_algo_) {
       std::cout << "\033[39m\033[1;29m" << el << " ";
     }
   } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
     std::cout << "\n\u001b[42;1mUSUAL ALGORITHM RESULT\u001b[0m\n";
+    res_usual_algo_ = GaussSolver::SolveUsualGauss(linear_equations_);
     for (const auto& el : res_usual_algo_) {
       std::cout << "\033[39m\033[1;29m" << el << " ";
     }
