@@ -13,7 +13,7 @@ class Timer {
  private:
   bool active_timer_{false};
   std::chrono::time_point<std::chrono::steady_clock> start_time_, end_time_;
-  std::chrono::duration<double> duration_;
+  std::chrono::duration<double, std::milli> duration_;
 };
 
 #endif  // _UTILS_TIMER_H_

@@ -68,7 +68,7 @@ class ConsoleInterface {
   static const std::vector<std::string> menu_items_;
 
   std::map<MenuSteps, std::function<bool(void)>> func_for_need_part;
-  SystemOfLinearEquations linear_equations_;
+  SLE linear_equations_;
   Timer timer_parallel_gauss_;
   Timer timer_usual_gauss_;
   int number_of_exec_ = 0;
