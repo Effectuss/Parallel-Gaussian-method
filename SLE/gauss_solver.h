@@ -11,20 +11,18 @@
 
 class GaussSolver {
  public:
-  virtual ~GaussSolver() = 0;
+  enum TypeOfGaussAlgo { kParallel, kSerial };
 
-  static std::vector<double> SolveUsualGauss(SLE system);
-  static std::vector<double> SolveParallelGauss(SLE system);
+  std::vector<double> SolveSerialGauss(SLE system);
+  std::vector<double> SolveParallelGauss(SLE system);
 
  private:
-  static int FindMaxRow(const SLE::Matrix& matrix, int k,
-                        int equations);
-  static void SwapRows(SLE::Matrix& matrix, int k,
-                       int max_row);
-  static void ReduceToTriangular(SLE::Matrix& matrix, int k,
-                                 int equations, int variables);
-  static void SolveEquations(const SLE::Matrix& matrix,
-                             int variables, std::vector<double>& result);
+  static int FindMaxRow(const SLE::Matrix& matrix, int k, int equations);
+  static void SwapRows(SLE::Matrix& matrix, int k, int max_row);
+  static void ReduceToTriangular(SLE::Matrix& matrix, int k, int equations,
+                                 int variables);
+  static void SolveEquations(const SLE::Matrix& matrix, int variables,
+                             std::vector<double>& result);
 
   static constexpr double kEPS = 1e-6;
 };

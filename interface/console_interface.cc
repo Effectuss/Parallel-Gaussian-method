@@ -57,19 +57,20 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
   ClearConsole();
   switch (choice) {
     case ItemsForFirstPartMenu::kConsoleInput:
-      this->linear_equations_.ReadAugmentedMatrixFromConsole();
+      linear_equations_ = std::move(ReaderSLE::ReadSLEFromConsole());
       break;
     case ItemsForFirstPartMenu::kLoadFromFile:
       try {
         std::string file_name = ReadFullPathToFile();
-        this->linear_equations_.ReadAugmentedMatrixFromFile(file_name);
+        linear_equations_ = std::move(ReaderSLE::ReadSLEFromFile(file_name));
       } catch (const std::logic_error& er) {
         std::cout << "\u001b[41;1m" << er.what() << "\u001b[0m";
         return false;
       }
       break;
     case ItemsForFirstPartMenu::kGenerateRandom:
-      this->linear_equations_.GenerateAugmentedMatrix();
+      // ?
+      linear_equations_ = std::move(GeneratorSLE::GenerateSLE());
       break;
     case kExit:
       return true;
@@ -81,7 +82,7 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
   }
 
   if (linear_equations_.IsLinearSystemCompatible()) {
-    if (number_of_exec_ > 0) next_step = MenuSteps::kThirdPart;
+    if (execution_count > 0) next_step = MenuSteps::kThirdPart;
     exit_flag = StartNeedPart(next_step);
   } else {
     ClearConsole();
@@ -104,7 +105,7 @@ bool ConsoleInterface::SelectItemForSecondPartMenu() {
       exit_flag = StartNeedPart(MenuSteps::kFirstPart);
       break;
     case ItemsForSecondPartMenu::kPrintCurrentSLE:
-      this->linear_equations_.PrintSystemOfLinearEquations();
+      PrinterSLE::PrintSLE(linear_equations_);
       break;
     case kExit:
       return true;
@@ -121,13 +122,15 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
   ClearConsole();
   switch (choice) {
     case ItemsForThirdPartMenu::kParallelAlgo:
-      RunGaussSolver(TypeOfGaussAlgo::kParallel);
+      linear_equations_.SolveSLEGauss(GaussSolver::TypeOfGaussAlgo::kParallel,
+                                      execution_count);
       break;
     case ItemsForThirdPartMenu::kUsualAlgo:
-      RunGaussSolver(TypeOfGaussAlgo::kUsual);
+      linear_equations_.SolveSLEGauss(GaussSolver::TypeOfGaussAlgo::kSerial,
+                                      execution_count);
       break;
     case ItemsForThirdPartMenu::kPrintSLE:
-      this->linear_equations_.PrintSystemOfLinearEquations();
+      PrinterSLE::PrintSLE(linear_equations_);
       break;
     case ItemsForThirdPartMenu::kPrintResParallel:
       PrintGaussResult(TypeOfGaussAlgo::kParallel);
@@ -228,11 +231,11 @@ void ConsoleInterface::ReadNumberOfExecution() {
   bool valid_input = false;
   ClearConsole();
   do {
-    std::cout << "\n\u001b[42;1mENTER NUMBER OF EXECUTIONS (1 - 10000): "
+    std::cout << "\n\u001b[42;1mENTER NUMBER OF EXECUTIONS (1 - 100000): "
                  "\u001b[0m\n> ";
-    std::cin >> number_of_exec_;
-    if (std::cin.peek() == '\n' && number_of_exec_ >= 1 &&
-        number_of_exec_ <= 10000) {
+    std::cin >> execution_count;
+    if (std::cin.peek() == '\n' && execution_count >= 1 &&
+        execution_count <= 10000) {
       valid_input = true;
     } else {
       ClearConsole();
@@ -247,4 +250,7 @@ void ConsoleInterface::ClearCin() {
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void ConsoleInterface::Exec() { StartNeedPart(MenuSteps::kFirstPart); }
+void ConsoleInterface::Exec() {
+  StartNeedPart(MenuSteps::kFirstPart);
+  std::cout << "THE END!";
+}

@@ -1,16 +1,12 @@
 #include "gauss_solver.h"
 
-GaussSolver::~GaussSolver() {}
-
-std::vector<double> GaussSolver::SolveParallelGauss(
-    SLE system) {
+std::vector<double> GaussSolver::SolveParallelGauss(SLE system) {
   std::vector<double> result;
   system.GetCoefficientMatrix();
   return result;
 }
 
-std::vector<double> GaussSolver::SolveUsualGauss(
-    SLE system) {
+std::vector<double> GaussSolver::SolveSerialGauss(SLE system) {
   int equations = system.GetAmountOfEquations();
   int variables = system.GetAmountOfVariable();
   SLE::Matrix matrix = system.GetAugmentedMatrix();
@@ -26,8 +22,7 @@ std::vector<double> GaussSolver::SolveUsualGauss(
   return result;
 }
 
-int GaussSolver::FindMaxRow(const SLE::Matrix& matrix,
-                            int k, int equations) {
+int GaussSolver::FindMaxRow(const SLE::Matrix& matrix, int k, int equations) {
   double max_value = fabs(matrix[k][k]);
   int max_row = k;
   for (int i = k + 1; i < equations; ++i) {
@@ -39,15 +34,14 @@ int GaussSolver::FindMaxRow(const SLE::Matrix& matrix,
   return max_row;
 }
 
-void GaussSolver::SwapRows(SLE::Matrix& matrix, int k,
-                           int max_row) {
+void GaussSolver::SwapRows(SLE::Matrix& matrix, int k, int max_row) {
   if (max_row != k) {
     std::swap(matrix[k], matrix[max_row]);
   }
 }
 
-void GaussSolver::ReduceToTriangular(SLE::Matrix& matrix,
-                                     int k, int equations, int variables) {
+void GaussSolver::ReduceToTriangular(SLE::Matrix& matrix, int k, int equations,
+                                     int variables) {
   for (int i = k + 1; i < equations; ++i) {
     double coeff = (-matrix[i][k]) / matrix[k][k];
     for (int j = k + 1; j <= variables; ++j) {
@@ -56,8 +50,8 @@ void GaussSolver::ReduceToTriangular(SLE::Matrix& matrix,
   }
 }
 
-void GaussSolver::SolveEquations(const SLE::Matrix& matrix,
-                                 int variables, std::vector<double>& result) {
+void GaussSolver::SolveEquations(const SLE::Matrix& matrix, int variables,
+                                 std::vector<double>& result) {
   for (int i = variables - 1; i >= 0; --i) {
     result[i] = matrix[i][variables];
     for (int j = i + 1; j < variables; ++j) {

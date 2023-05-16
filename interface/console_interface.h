@@ -7,8 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../linear_equation_solver/gauss_solver.h"
-#include "../linear_equation_solver/system_of_linear_equations.h"
+#include "../SLE/system_of_linear_equations.h"
 #include "../utils/timer.h"
 
 class ConsoleInterface {
@@ -47,7 +46,6 @@ class ConsoleInterface {
     kChangeNumberOfExec
   };
 
-  enum TypeOfGaussAlgo { kParallel, kUsual };
   void InitMenuFunctional();
 
   bool StartNeedPart(MenuSteps menu_step);
@@ -66,12 +64,13 @@ class ConsoleInterface {
 
   static constexpr int kExit = 0;
   static const std::vector<std::string> menu_items_;
-
   std::map<MenuSteps, std::function<bool(void)>> func_for_need_part;
   SLE linear_equations_;
+  int execution_count = 0;
+
   Timer timer_parallel_gauss_;
   Timer timer_usual_gauss_;
-  int number_of_exec_ = 0;
+
   std::vector<double> res_usual_algo_;
   std::vector<double> res_parallel_algo_;
 };

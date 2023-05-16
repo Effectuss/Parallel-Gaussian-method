@@ -5,11 +5,11 @@
 
 class ReaderSLE {
  public:
-  static SLE ReadSLEFromConsole() {
+   static SLE ReadSLEFromConsole() {
     int equations_count = ReadSizeSLEFromConsole();
     SLE::Matrix coefficient_matrix(equations_count, Vector(equations_count));
     Vector vector_constants(equations_count);
-    ReadSLEValuesFromConsole(coefficient_matrix, vector_constants);
+    FillSLEValuesFromConsole(coefficient_matrix, vector_constants);
     return SLE(coefficient_matrix, vector_constants);
   }
 
@@ -62,7 +62,7 @@ class ReaderSLE {
     return equations_count;
   }
 
-  static void ReadSLEValuesFromConsole(SLE::Matrix& coefficient_matrix,
+  static void FillSLEValuesFromConsole(SLE::Matrix& coefficient_matrix,
                                        Vector& vector_constants) {
     for (int i = 0; i < coefficient_matrix.size(); ++i) {
       int coefficient_x = 1;

@@ -20,6 +20,8 @@ class PrinterSLE {
       std::cout << std::endl;
     }
   }
+
+  static void PrintResultSLE(const SLE& system) {}
 };
 
 #endif  // _SLE_PRINTER_SLE_H_
