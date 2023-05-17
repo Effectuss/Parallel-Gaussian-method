@@ -12,7 +12,7 @@ SLE ReaderSLE::ReadSLEFromConsole() {
   return SLE(coefficient_matrix, vector_constants);
 }
 
-SLE ReaderSLE::ReadSLEFromFile(const std::string& file_name) {
+SLE ReaderSLE::ReadSLEFromFile(const std::string &file_name) {
   std::ifstream file(file_name);
   if (!file.is_open()) {
     throw std::logic_error("THE FILE DOESNT'T EXIST!");
@@ -41,7 +41,7 @@ int ReaderSLE::ReadSizeSLEFromConsole() {
   return equations_count;
 }
 
-int ReaderSLE::ReadSizeSLEFromFile(std::ifstream& file) {
+int ReaderSLE::ReadSizeSLEFromFile(std::ifstream &file) {
   int equations_count = 0;
   file >> equations_count;
   if (file.peek() != '\n' || equations_count <= 0) {
@@ -58,8 +58,8 @@ void ReaderSLE::ClearAndIgnoreCin() {
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void ReaderSLE::FillSLEValuesFromConsole(SLE::Matrix& coefficient_matrix,
-                                         Vector& vector_constants) {
+void ReaderSLE::FillSLEValuesFromConsole(SLE::Matrix &coefficient_matrix,
+                                         Vector &vector_constants) {
   for (int i = 0; i < static_cast<int>(coefficient_matrix.size()); ++i) {
     int coefficient_x = 1;
     int cols = coefficient_matrix.at(i).size();
@@ -81,9 +81,9 @@ void ReaderSLE::FillSLEValuesFromConsole(SLE::Matrix& coefficient_matrix,
   }
 }
 
-void ReaderSLE::FillSLEFromFile(std::ifstream& file,
-                                SLE::Matrix& coefficient_matrix,
-                                Vector& vector_constants) {
+void ReaderSLE::FillSLEFromFile(std::ifstream &file,
+                                SLE::Matrix &coefficient_matrix,
+                                Vector &vector_constants) {
   int size = coefficient_matrix.size();
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j <= size; ++j) {

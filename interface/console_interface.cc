@@ -57,21 +57,21 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
   ClearConsole();
   switch (choice) {
     case ItemsForFirstPartMenu::kConsoleInput:
-      linear_equations_ = std::move(ReaderSLE::ReadSLEFromConsole());
+      linear_equations_ = ReaderSLE::ReadSLEFromConsole();
       break;
     case ItemsForFirstPartMenu::kLoadFromFile:
       try {
         std::string file_name = ReadFullPathToFile();
-        linear_equations_ = std::move(ReaderSLE::ReadSLEFromFile(file_name));
-      } catch (const std::logic_error& er) {
+        linear_equations_ = ReaderSLE::ReadSLEFromFile(file_name);
+      } catch (const std::logic_error &er) {
         std::cout << "\u001b[41;1m" << er.what() << "\u001b[0m";
         return false;
       }
       break;
     case ItemsForFirstPartMenu::kGenerateRandom:
       ClearConsole();
-      linear_equations_ = std::move(
-          GeneratorSLE::GenerateSLE(ReaderSLE::ReadSizeSLEFromConsole()));
+      linear_equations_ =
+          GeneratorSLE::GenerateSLE(ReaderSLE::ReadSizeSLEFromConsole());
       break;
     case kExit:
       return true;
@@ -170,7 +170,7 @@ void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
   timer_serial_gauss_.DisplayTimerValues();
 }
 
-int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {
+int ConsoleInterface::ReadMenuOption(const std::string &current_part_) {
   int choice{};
   bool is_valid_input{false};
   do {

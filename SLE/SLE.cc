@@ -20,7 +20,7 @@ int SLE::FindRankOfMatrix(Matrix matrix) const {
   return rank;
 }
 
-int SLE::FindPivotRow(const SLE::Matrix& matrix, const int j,
+int SLE::FindPivotRow(const SLE::Matrix &matrix, const int j,
                       const int start_row, const int end_row) const {
   int pivot_row = -1;
   double max_value = 0.0;
@@ -37,11 +37,11 @@ int SLE::FindPivotRow(const SLE::Matrix& matrix, const int j,
   return pivot_row;
 }
 
-void SLE::SwapRows(SLE::Matrix& matrix, const int row1, const int row2) const {
+void SLE::SwapRows(SLE::Matrix &matrix, const int row1, const int row2) const {
   std::swap(matrix[row1], matrix[row2]);
 }
 
-void SLE::EliminateSubsequentRows(Matrix& matrix, const int rank,
+void SLE::EliminateSubsequentRows(Matrix &matrix, const int rank,
                                   const int col) const {
   int rows = matrix.size();
   int cols = matrix.at(0).size();
@@ -91,13 +91,13 @@ std::vector<double> SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
   return result;
 }
 
-const SLE::Matrix& SLE::GetAugmentedMatrix() const { return augmented_matrix_; }
+const SLE::Matrix &SLE::GetAugmentedMatrix() const { return augmented_matrix_; }
 
-const SLE::Matrix& SLE::GetCoefficientMatrix() const {
+const SLE::Matrix &SLE::GetCoefficientMatrix() const {
   return coefficient_matrix_;
 }
 
-const std::vector<double>& SLE::GetVectorOfConstants() const {
+const std::vector<double> &SLE::GetVectorOfConstants() const {
   return vector_of_constants_;
 }
 
@@ -126,8 +126,8 @@ const std::vector<double> SLE::GetSerialResultSLE() const {
 bool SLE::IsEmptySystem() const { return augmented_matrix_.empty(); }
 
 void SLE::ResizeAugmentedMatrix() {
-  augmented_matrix_ = std::move(Matrix(
-      rows_augmented_matrix_, std::vector<double>(cols_augmented_matrix_)));
+  augmented_matrix_ = Matrix(rows_augmented_matrix_,
+                             std::vector<double>(cols_augmented_matrix_));
 }
 
 void SLE::CreateAugmentedMatrix() {
@@ -142,7 +142,7 @@ void SLE::CreateAugmentedMatrix() {
   }
 }
 
-const double& SLE::operator()(int rows, int cols) const {
+const double &SLE::operator()(int rows, int cols) const {
   if (rows >= rows_augmented_matrix_ || cols >= cols_augmented_matrix_ ||
       cols < 0 || rows < 0) {
     throw std::out_of_range("Out of range!");
@@ -150,8 +150,8 @@ const double& SLE::operator()(int rows, int cols) const {
   return augmented_matrix_.at(rows).at(cols);
 }
 
-SLE::SLE(const Matrix& coefficient_matrix,
-         const std::vector<double>& vector_constants)
+SLE::SLE(const Matrix &coefficient_matrix,
+         const std::vector<double> &vector_constants)
     : coefficient_matrix_{coefficient_matrix},
       vector_of_constants_{vector_constants},
       rows_augmented_matrix_{(int)coefficient_matrix.size()},

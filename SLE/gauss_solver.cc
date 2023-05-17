@@ -23,7 +23,7 @@ std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
   return result;
 }
 
-int GaussSolver::FindMaxRow(const SLE::Matrix& matrix, int k, int equations) {
+int GaussSolver::FindMaxRow(const SLE::Matrix &matrix, int k, int equations) {
   double max_value = fabs(matrix[k][k]);
   int max_row = k;
   for (int i = k + 1; i < equations; ++i) {
@@ -35,13 +35,13 @@ int GaussSolver::FindMaxRow(const SLE::Matrix& matrix, int k, int equations) {
   return max_row;
 }
 
-void GaussSolver::SwapRows(SLE::Matrix& matrix, int k, int max_row) {
+void GaussSolver::SwapRows(SLE::Matrix &matrix, int k, int max_row) {
   if (max_row != k) {
     std::swap(matrix[k], matrix[max_row]);
   }
 }
 
-void GaussSolver::ReduceToTriangular(SLE::Matrix& matrix, int k, int equations,
+void GaussSolver::ReduceToTriangular(SLE::Matrix &matrix, int k, int equations,
                                      int variables) {
   for (int i = k + 1; i < equations; ++i) {
     double coeff = (-matrix[i][k]) / matrix[k][k];
@@ -51,8 +51,8 @@ void GaussSolver::ReduceToTriangular(SLE::Matrix& matrix, int k, int equations,
   }
 }
 
-void GaussSolver::SolveEquations(const SLE::Matrix& matrix, int variables,
-                                 std::vector<double>& result) {
+void GaussSolver::SolveEquations(const SLE::Matrix &matrix, int variables,
+                                 std::vector<double> &result) {
   for (int i = variables - 1; i >= 0; --i) {
     result[i] = matrix[i][variables];
     for (int j = i + 1; j < variables; ++j) {
