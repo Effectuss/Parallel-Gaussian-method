@@ -1,4 +1,4 @@
-#include "system_of_linear_equations.h"
+#include "SLE.h"
 
 int SLE::FindRankOfMatrix(Matrix matrix) const {
   int rows = matrix.size();
@@ -105,7 +105,7 @@ int SLE::GetAmountOfEquations() const { return rows_augmented_matrix_; }
 
 int SLE::GetAmountOfVariable() const { return cols_augmented_matrix_ - 1; }
 
-const std::vector<double>& SLE::GetParallelResultSLE() const {
+const std::vector<double> SLE::GetParallelResultSLE() const {
   if (!IsLinearSystemCompatible()) {
     throw std::logic_error("The system cant be solve");
   }
@@ -114,7 +114,7 @@ const std::vector<double>& SLE::GetParallelResultSLE() const {
   return result;
 }
 
-const std::vector<double>& SLE::GetSerialResultSLE() const {
+const std::vector<double> SLE::GetSerialResultSLE() const {
   if (!IsLinearSystemCompatible()) {
     throw std::logic_error("The system cant be solve");
   }
@@ -154,8 +154,8 @@ SLE::SLE(const Matrix& coefficient_matrix,
          const std::vector<double>& vector_constants)
     : coefficient_matrix_{coefficient_matrix},
       vector_of_constants_{vector_constants},
-      rows_augmented_matrix_{coefficient_matrix.size()},
-      cols_augmented_matrix_{coefficient_matrix.size() + 1} {
+      rows_augmented_matrix_{(int)coefficient_matrix.size()},
+      cols_augmented_matrix_{(int)coefficient_matrix.size() + 1} {
   ResizeAugmentedMatrix();
   CreateAugmentedMatrix();
 }

@@ -1,5 +1,6 @@
 #include "gauss_solver.h"
 
+#include "SLE.h"
 std::vector<double> GaussSolver::SolveParallelGauss(SLE system) const {
   std::vector<double> result;
   system.GetCoefficientMatrix();

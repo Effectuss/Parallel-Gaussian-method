@@ -7,7 +7,10 @@
 #include <string>
 #include <vector>
 
-#include "../SLE/system_of_linear_equations.h"
+#include "../SLE/SLE.h"
+#include "../SLE/generator_SLE.h"
+#include "../SLE/printer_SLE.h"
+#include "../SLE/reader_SLE.h"
 #include "../utils/timer.h"
 
 class ConsoleInterface {

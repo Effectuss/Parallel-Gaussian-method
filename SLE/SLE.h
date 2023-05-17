@@ -10,9 +10,6 @@
 #include <vector>
 
 #include "gauss_solver.h"
-#include "generator_SLE.h"
-#include "printer_SLE.h"
-#include "reader_SLE.h"
 
 class SLE {
  public:
@@ -34,8 +31,8 @@ class SLE {
   const std::vector<double>& GetVectorOfConstants() const;
   int GetAmountOfEquations() const;
   int GetAmountOfVariable() const;
-  const std::vector<double>& GetParallelResultSLE() const;
-  const std::vector<double>& GetSerialResultSLE() const;
+  const std::vector<double> GetParallelResultSLE() const;
+  const std::vector<double> GetSerialResultSLE() const;
 
   bool IsLinearSystemCompatible() const;
   std::vector<double> SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
@@ -56,7 +53,7 @@ class SLE {
   static constexpr double kEPS = 1e-6;
 
   int rows_augmented_matrix_ = 0;
-  int cols_augmented_matrix_ = 0;
+  int  cols_augmented_matrix_ = 0;
   Matrix augmented_matrix_{};
   Matrix coefficient_matrix_{};
   std::vector<double> vector_of_constants_{};

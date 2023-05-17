@@ -7,7 +7,7 @@
 #include <thread>
 #include <vector>
 
-#include "system_of_linear_equations.h"
+class SLE;
 
 class GaussSolver {
  public:
@@ -17,11 +17,13 @@ class GaussSolver {
   std::vector<double> SolveParallelGauss(SLE system) const;
 
  private:
-  static int FindMaxRow(const SLE::Matrix& matrix, int k, int equations);
-  static void SwapRows(SLE::Matrix& matrix, int k, int max_row);
-  static void ReduceToTriangular(SLE::Matrix& matrix, int k, int equations,
+  using Matrix = std::vector<std::vector<double> >;
+
+  static int FindMaxRow(const Matrix& matrix, int k, int equations);
+  static void SwapRows(Matrix& matrix, int k, int max_row);
+  static void ReduceToTriangular(Matrix& matrix, int k, int equations,
                                  int variables);
-  static void SolveEquations(const SLE::Matrix& matrix, int variables,
+  static void SolveEquations(const Matrix& matrix, int variables,
                              std::vector<double>& result);
 
   static constexpr double kEPS = 1e-6;

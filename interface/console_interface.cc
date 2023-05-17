@@ -70,8 +70,8 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       break;
     case ItemsForFirstPartMenu::kGenerateRandom:
       ClearConsole();
-      int size_SLE = ReaderSLE::ReadSizeSLEFromConsole();
-      linear_equations_ = std::move(GeneratorSLE::GenerateSLE(size_SLE));
+      linear_equations_ = std::move(
+          GeneratorSLE::GenerateSLE(ReaderSLE::ReadSizeSLEFromConsole()));
       break;
     case kExit:
       return true;
