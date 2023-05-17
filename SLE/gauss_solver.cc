@@ -1,12 +1,12 @@
 #include "gauss_solver.h"
 
-std::vector<double> GaussSolver::SolveParallelGauss(SLE system) {
+std::vector<double> GaussSolver::SolveParallelGauss(SLE system) const {
   std::vector<double> result;
   system.GetCoefficientMatrix();
   return result;
 }
 
-std::vector<double> GaussSolver::SolveSerialGauss(SLE system) {
+std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
   int equations = system.GetAmountOfEquations();
   int variables = system.GetAmountOfVariable();
   SLE::Matrix matrix = system.GetAugmentedMatrix();

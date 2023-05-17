@@ -68,8 +68,8 @@ bool SLE::IsLinearSystemCompatible() const {
   return false;
 }
 
-void SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
-                        int execution_count) {
+std::vector<double> SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
+                                       int execution_count) {
   if (!IsLinearSystemCompatible()) {
     throw std::logic_error("The system cant be solve");
   }
@@ -77,21 +77,21 @@ void SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
     throw std::invalid_argument(
         "The number of executions must be between 1 and 100000");
   }
+  if (IsEmptySystem()) {
+    throw std::logic_error("The system is empty!");
+  }
+  std::vector<double> result;
   while (execution_count--) {
     if (type_algo == GaussSolver::TypeOfGaussAlgo::kParallel) {
-      res_parallel_algo_ = gauss_solver_.SolveParallelGauss(*this);
+      result = gauss_solver_.SolveParallelGauss(*this);
     } else if (type_algo == GaussSolver::TypeOfGaussAlgo::kSerial) {
-      res_serial_algo_ = gauss_solver_.SolveSerialGauss(*this);
+      result = gauss_solver_.SolveSerialGauss(*this);
     }
   }
+  return result;
 }
 
-const SLE::Matrix& SLE::GetAugmentedMatrix() const {
-  // if (IsEmptySystem) {
-  //   throw std::logic_error("The system is empty!");
-  // }
-  return augmented_matrix_;
-}
+const SLE::Matrix& SLE::GetAugmentedMatrix() const { return augmented_matrix_; }
 
 const SLE::Matrix& SLE::GetCoefficientMatrix() const {
   return coefficient_matrix_;
@@ -105,8 +105,23 @@ int SLE::GetAmountOfEquations() const { return rows_augmented_matrix_; }
 
 int SLE::GetAmountOfVariable() const { return cols_augmented_matrix_ - 1; }
 
-std::vector<double>& SLE::GetResultSLE(
-    GaussSolver::TypeOfGaussAlgo type_of_algo) const {}
+const std::vector<double>& SLE::GetParallelResultSLE() const {
+  if (!IsLinearSystemCompatible()) {
+    throw std::logic_error("The system cant be solve");
+  }
+  std::vector<double> result;
+  result = gauss_solver_.SolveParallelGauss(*this);
+  return result;
+}
+
+const std::vector<double>& SLE::GetSerialResultSLE() const {
+  if (!IsLinearSystemCompatible()) {
+    throw std::logic_error("The system cant be solve");
+  }
+  std::vector<double> result;
+  result = gauss_solver_.SolveSerialGauss(*this);
+  return result;
+}
 
 bool SLE::IsEmptySystem() const { return augmented_matrix_.empty(); }
 

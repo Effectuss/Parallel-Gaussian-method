@@ -5,7 +5,7 @@
 
 class ReaderSLE {
  public:
-   static SLE ReadSLEFromConsole() {
+  static SLE ReadSLEFromConsole() {
     int equations_count = ReadSizeSLEFromConsole();
     SLE::Matrix coefficient_matrix(equations_count, Vector(equations_count));
     Vector vector_constants(equations_count);
@@ -25,9 +25,6 @@ class ReaderSLE {
     return SLE(coefficient_matrix, vector_constants);
   }
 
- private:
-  using Vector = std::vector<double>;
-
   static int ReadSizeSLEFromConsole() {
     std::cout << "\u001b[42;1mENTER SLE DIMENSION: \u001b[0m\n> ";
     int equations_count = 0;
@@ -44,6 +41,9 @@ class ReaderSLE {
     } while (!valid_input);
     return equations_count;
   }
+
+ private:
+  using Vector = std::vector<double>;
 
   static void ClearAndIgnoreCin() {
     std::cout << "\u001b[41;1mWRONG INPUT! TRUE AGAIN!\u001b[0m\n";

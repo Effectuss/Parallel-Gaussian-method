@@ -55,8 +55,6 @@ class ConsoleInterface {
   void ReadNumberOfExecution();
   bool SelectedItemForThirdPartMenu();
   void PrintExecutionTimeOfAlgorithms();
-  void PrintGaussResult(TypeOfGaussAlgo type_of_algo);
-  void RunGaussSolver(TypeOfGaussAlgo type_of_algo);
 
   void ClearCin();
   void ClearConsole();
@@ -67,12 +65,8 @@ class ConsoleInterface {
   std::map<MenuSteps, std::function<bool(void)>> func_for_need_part;
   SLE linear_equations_;
   int execution_count = 0;
-
   Timer timer_parallel_gauss_;
-  Timer timer_usual_gauss_;
-
-  std::vector<double> res_usual_algo_;
-  std::vector<double> res_parallel_algo_;
+  Timer timer_serial_gauss_;
 };
 
 #endif  // _INTERFACE_CONSOLE_INTERFACE_H_

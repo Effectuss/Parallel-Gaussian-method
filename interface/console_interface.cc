@@ -69,8 +69,9 @@ bool ConsoleInterface::SelectItemForFirstPartMenu() {
       }
       break;
     case ItemsForFirstPartMenu::kGenerateRandom:
-      // ?
-      linear_equations_ = std::move(GeneratorSLE::GenerateSLE());
+      ClearConsole();
+      int size_SLE = ReaderSLE::ReadSizeSLEFromConsole();
+      linear_equations_ = std::move(GeneratorSLE::GenerateSLE(size_SLE));
       break;
     case kExit:
       return true;
@@ -122,21 +123,25 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
   ClearConsole();
   switch (choice) {
     case ItemsForThirdPartMenu::kParallelAlgo:
+      timer_parallel_gauss_.StartTimer();
       linear_equations_.SolveSLEGauss(GaussSolver::TypeOfGaussAlgo::kParallel,
                                       execution_count);
+      timer_parallel_gauss_.EndTimer();
       break;
     case ItemsForThirdPartMenu::kUsualAlgo:
+      timer_serial_gauss_.StartTimer();
       linear_equations_.SolveSLEGauss(GaussSolver::TypeOfGaussAlgo::kSerial,
                                       execution_count);
+      timer_serial_gauss_.EndTimer();
       break;
     case ItemsForThirdPartMenu::kPrintSLE:
       PrinterSLE::PrintSLE(linear_equations_);
       break;
     case ItemsForThirdPartMenu::kPrintResParallel:
-      PrintGaussResult(TypeOfGaussAlgo::kParallel);
+      PrinterSLE::PrintParallelResultSLE(linear_equations_);
       break;
     case ItemsForThirdPartMenu::kPrintResUsual:
-      PrintGaussResult(TypeOfGaussAlgo::kUsual);
+      PrinterSLE::PrintSerialResultSLE(linear_equations_);
       break;
     case ItemsForThirdPartMenu::kCompareTime:
       PrintExecutionTimeOfAlgorithms();
@@ -162,43 +167,7 @@ void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
   std::cout << "\033[39m\033[1;29mParallel Gauss algoritm: ";
   timer_parallel_gauss_.DisplayTimerValues();
   std::cout << "\033[39m\033[1;29mUsual Gauss algoritm: ";
-  timer_usual_gauss_.DisplayTimerValues();
-}
-
-void ConsoleInterface::PrintGaussResult(TypeOfGaussAlgo type_of_algo) {
-  if (type_of_algo == TypeOfGaussAlgo::kParallel) {
-    std::cout << "\n\u001b[42;1mPARALLEL ALGORITHM RESULT\u001b[0m\n";
-    res_parallel_algo_ = GaussSolver::SolveParallelGauss(linear_equations_);
-    for (const auto& el : res_parallel_algo_) {
-      std::cout << "\033[39m\033[1;29m" << el << " ";
-    }
-  } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
-    std::cout << "\n\u001b[42;1mUSUAL ALGORITHM RESULT\u001b[0m\n";
-    res_usual_algo_ = GaussSolver::SolveUsualGauss(linear_equations_);
-    for (const auto& el : res_usual_algo_) {
-      std::cout << "\033[39m\033[1;29m" << el << " ";
-    }
-  }
-  std::cout << std::endl;
-}
-
-void ConsoleInterface::RunGaussSolver(TypeOfGaussAlgo type_of_algo) {
-  int n = number_of_exec_ - 1;
-  if (type_of_algo == TypeOfGaussAlgo::kParallel) {
-    timer_parallel_gauss_.StartTimer();
-    while (n--) {
-      GaussSolver::SolveParallelGauss(linear_equations_);
-    }
-    res_parallel_algo_ = GaussSolver::SolveParallelGauss(linear_equations_);
-    timer_parallel_gauss_.EndTimer();
-  } else if (type_of_algo == TypeOfGaussAlgo::kUsual) {
-    timer_usual_gauss_.StartTimer();
-    while (n--) {
-      GaussSolver::SolveUsualGauss(linear_equations_);
-    }
-    res_usual_algo_ = GaussSolver::SolveUsualGauss(linear_equations_);
-    timer_usual_gauss_.EndTimer();
-  }
+  timer_serial_gauss_.DisplayTimerValues();
 }
 
 int ConsoleInterface::ReadMenuOption(const std::string& current_part_) {

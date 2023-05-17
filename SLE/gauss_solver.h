@@ -13,8 +13,8 @@ class GaussSolver {
  public:
   enum TypeOfGaussAlgo { kParallel, kSerial };
 
-  std::vector<double> SolveSerialGauss(SLE system);
-  std::vector<double> SolveParallelGauss(SLE system);
+  std::vector<double> SolveSerialGauss(SLE system) const;
+  std::vector<double> SolveParallelGauss(SLE system) const;
 
  private:
   static int FindMaxRow(const SLE::Matrix& matrix, int k, int equations);

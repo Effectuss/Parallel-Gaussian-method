@@ -34,12 +34,12 @@ class SLE {
   const std::vector<double>& GetVectorOfConstants() const;
   int GetAmountOfEquations() const;
   int GetAmountOfVariable() const;
-  std::vector<double>& GetResultSLE(
-      GaussSolver::TypeOfGaussAlgo type_of_algo) const;
+  const std::vector<double>& GetParallelResultSLE() const;
+  const std::vector<double>& GetSerialResultSLE() const;
 
   bool IsLinearSystemCompatible() const;
-  void SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
-                     int execution_count);
+  std::vector<double> SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
+                                    int execution_count);
 
  private:
   int FindRankOfMatrix(Matrix matrix) const;
@@ -61,9 +61,6 @@ class SLE {
   Matrix coefficient_matrix_{};
   std::vector<double> vector_of_constants_{};
   GaussSolver gauss_solver_;
-
-  std::vector<double> res_serial_algo_;
-  std::vector<double> res_parallel_algo_;
 };
 
 #endif  // _SLE_SYSTEM_OF_LINEAR_EQUATIONS_H_
