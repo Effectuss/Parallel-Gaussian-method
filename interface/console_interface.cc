@@ -18,10 +18,10 @@ const std::vector<std::string> ConsoleInterface::menu_items_{
     "\n\u001b[42;1m             \
     CHOOSE AN OPTION:                     \u001b[0m\n \
     \033[39m\033[1;29m1. Parallel algorithm for solving the SLE\n \
-    2. Usual algorithm for solving the SLE\n \
+    2. Serial algorithm for solving the SLE\n \
     3. Print current augmented matrix\n \
     4. Print result parallel algoritm\n \
-    5. Print result usual algorithm\n \
+    5. Print result serial algorithm\n \
     6. Compare time of execution\n \
     7. Change data matrix description the SLE\n \
     8. Change the number of algorithm executions\n \
@@ -166,7 +166,7 @@ void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
   std::cout << "\n\u001b[42;1mALGORITHM EXECUTION TIME\u001b[0m\n";
   std::cout << "\033[39m\033[1;29mParallel Gauss algoritm: ";
   timer_parallel_gauss_.DisplayTimerValues();
-  std::cout << "\033[39m\033[1;29mUsual Gauss algoritm: ";
+  std::cout << "\033[39m\033[1;29mSerial Gauss algoritm: ";
   timer_serial_gauss_.DisplayTimerValues();
 }
 
@@ -219,7 +219,4 @@ void ConsoleInterface::ClearCin() {
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void ConsoleInterface::Exec() {
-  StartNeedPart(MenuSteps::kFirstPart);
-  std::cout << "THE END!";
-}
+void ConsoleInterface::Exec() { StartNeedPart(MenuSteps::kFirstPart); }

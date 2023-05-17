@@ -60,7 +60,7 @@ void ReaderSLE::ClearAndIgnoreCin() {
 
 void ReaderSLE::FillSLEValuesFromConsole(SLE::Matrix& coefficient_matrix,
                                          Vector& vector_constants) {
-  for (int i = 0; i < coefficient_matrix.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(coefficient_matrix.size()); ++i) {
     int coefficient_x = 1;
     int cols = coefficient_matrix.at(i).size();
     for (int j = 0; j <= cols; ++j) {

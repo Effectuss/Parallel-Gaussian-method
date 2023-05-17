@@ -52,11 +52,11 @@ class SLE {
 
   static constexpr double kEPS = 1e-6;
 
-  int rows_augmented_matrix_ = 0;
-  int  cols_augmented_matrix_ = 0;
-  Matrix augmented_matrix_{};
   Matrix coefficient_matrix_{};
   std::vector<double> vector_of_constants_{};
+  int rows_augmented_matrix_{};
+  int cols_augmented_matrix_{};
+  Matrix augmented_matrix_{};
   GaussSolver gauss_solver_;
 };
 
