@@ -8,8 +8,7 @@ install:
 	cmake -S . -B ./build
 	cmake --build ./build
 	
-
-run:
+run: install
 	cd build; ./ParallelGaussianMethod
 
 clean:

@@ -45,13 +45,12 @@ target_compile_options(
     -Werror
     -Wextra
     -Wpedantic
-    -fsanitize=address
     -std=c++17
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    -fsanitize=address
-)
+# target_link_libraries(${PROJECT_NAME} PRIVATE
+#     -fsanitize=address
+# )
 
 find_program(CPPCHECK cppcheck)
 
@@ -74,6 +73,7 @@ else()
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.)
+
 include(ClangFormat)
 
 clangformat_setup(

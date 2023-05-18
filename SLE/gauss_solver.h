@@ -19,12 +19,14 @@ class GaussSolver {
  private:
   using Matrix = std::vector<std::vector<double> >;
 
-  static int FindMaxRow(const Matrix& matrix, int k, int equations);
-  static void SwapRows(Matrix& matrix, int k, int max_row);
-  static void ReduceToTriangular(Matrix& matrix, int k, int equations,
-                                 int variables);
-  static void SolveEquations(const Matrix& matrix, int variables,
-                             std::vector<double>& result);
+  int FindMaxRow(const Matrix& matrix, int k, int equations) const;
+  void SwapRows(Matrix& matrix, int k, int max_row) const;
+  void NullifyColumnSerial(Matrix& matrix, int k, int size) const;
+  void SolveEquations(const Matrix& matrix, int variables,
+                      std::vector<double>& result) const;
+  void NullifyColumnParallel(Matrix& matrix, int start, int size,
+                             int opora) const;
+  void MakeTreangularMatrix(Matrix& matrix, int start, int end, int row) const;
 
   static constexpr double kEPS = 1e-6;
 };
