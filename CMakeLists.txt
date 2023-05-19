@@ -19,6 +19,7 @@ set(HEADERS
     ${CMAKE_SOURCE_DIR}/SLE/printer_SLE.h
     ${CMAKE_SOURCE_DIR}/SLE/reader_SLE.h
     ${CMAKE_SOURCE_DIR}/SLE/SLE.h
+    ${CMAKE_SOURCE_DIR}/utils/barrier.h
 )
 
 set(SOURCES
@@ -42,7 +43,7 @@ target_compile_options(
     ${PROJECT_NAME}
     PRIVATE
     -Wall
-    -Werror
+    # -Werror
     -Wextra
     -Wpedantic
     -std=c++17

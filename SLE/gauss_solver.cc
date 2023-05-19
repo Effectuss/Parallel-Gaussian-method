@@ -2,130 +2,34 @@
 
 #include "SLE.h"
 
-std::vector<double> GaussSolver::SolveParallelGauss(SLE system) const {
-  std::vector<double> result;
+void GaussSolver::MakeDiagonalSystem() {}
+
+std::vector<double> GaussSolver::SolveParallelGauss(SLE system,
+                                                    int numb_thread) const {
+  if (numb_thread > std::thread::hardware_concurrency() || numb_thread <= 0) {
+    throw std::logic_error("The number of threads incorrect! Try again!");
+  }
+  std::vector<std::thread> pool_thread;
+  Barrier barrier(numb_thread), phase_one(numb_thread);
   int size = system.GetAmountOfEquations();
-  // int num_treads = std::thread::hardware_concurrency();
-  // int num_treads = 3;
-  Matrix matrix = system.GetAugmentedMatrix();
-  // for (int i = 0; i < size; ++i) {
-  //   for (int j = 0; j < size; ++j) {
-  //     std::cout << matrix[i][j] << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-  // int c;
-  // std::cin >> c;
-  for (int k = 0; k < size - 1; ++k) {
-    MakeTreangularMatrix(matrix, k + 1, size - 1, k);
-  }
-  // std::cout << "GO AHEAD" << std::endl;
-  // int c;
-  // for (int l = 0; l < (int)matrix.size(); ++l) {
-  //   for (int m = 0; m < (int)matrix[l].size(); ++m) {
-  //     std::cout << std::setw(8) << std::left << matrix[l][m] << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-  // std::cin >> c;
-  for (int k = size - 1; k > 0; --k) {
-    MakeTreangularMatrix(matrix, 0, k - 1, k);
-  }
-  // for (int k = size - 1; k >= 0; --k) {
-  //   if (k < num_treads) {
-  //     num_treads = k;
-  //   }
-  //   int count = k / num_treads;
-  //   int start = 0;
-  //   for (int i = 0; i < num_treads; ++i) {
-  //     if (i == num_treads - 1) {
-  //       count = size - i * count - 1;
-  //     }
-  //     threads.emplace_back(&GaussSolver::NullifyColumnParallel, this,
-  //                          std::ref(matrix), start, count, k);
-  //     start += count;
-  //   }
-  //   for (auto &th : threads) {
-  //     th.join();
-  //   }
-  //   threads.clear();
-  // }
-  // std::cout << "BACKWARD" << std::endl;
-  // for (int l = 0; l < (int)matrix.size(); ++l) {
-  //   for (int m = 0; m < (int)matrix[l].size(); ++m) {
-  //     std::cout << std::setw(10) << std::left << matrix[l][m] << " ";
-  //   }
-  //   std::cout << std::endl;
-  // }
-  // std::cin >> c;
+  int step_interval = size / (numb_thread - 1);
 
-  for (int i = 0; i < size; ++i) {
-    result.push_back(matrix[i][size] / matrix[i][i]);
+  for (int i = 0; i < numb_thread - 1; ++i) {
+    int start = step_interval * i;
+    int end = step_interval * (i + 1);
+    pool_thread.emplace_back();
   }
-  return result;
-}
 
-void GaussSolver::NullifyColumnParallel(Matrix &matrix, int start, int size,
-                                        int opora) const {
-  // std::cout << "NULLFASF" << std::endl;
-  // std::cout << "START = " << start << std::endl;
-  // std::cout << "SIZE = " << size << std::endl;
-  // std::cout << "OPORA = " << size << std::endl;
-  for (int i = start; i < std::min(size + start, (int)matrix.size()); ++i) {
-    double coeff = (-matrix[i][opora]) / matrix[opora][opora];
-    // int asd;
-    for (int j = opora; j <= (int)matrix[i].size(); ++j) {
-      // for (int l = 0; l < (int)matrix.size(); ++l) {
-      //   for (int m = 0; m < (int)matrix[l].size(); ++m) {
-      //     std::cout << matrix[l][m] << " ";
-      //   }
-      //   std::cout << std::endl;
-      // }
-      // std::cout << "COORD ELENT = " << i << " " << j << " " << opora << " "
-      // << j
-      //           << std::endl;
-      matrix[i][j] += coeff * matrix[opora][j];
-      // for (int l = 0; l < (int)matrix.size(); ++l) {
-      //   for (int m = 0; m < (int)matrix[l].size(); ++m) {
-      //     std::cout << matrix[l][m] << " ";
-      //   }
-      //   std::cout << std::endl;
-      // }
-      // std::cin >> asd;
+  for (auto& th : pool_thread) {
+    if (th.joinable()) {
+      th.join();
     }
   }
-}
 
-void GaussSolver::MakeTreangularMatrix(Matrix &matrix, int start, int end,
-                                       int row) const {
-  std::vector<std::thread> threads;
-  int row_count = end - start + 1;
-  int thread_count =
-      std::min((int)std::thread::hardware_concurrency(), row_count);
-  int step = row_count / thread_count;
-  // std::cout << "row_count = " << row_count << std::endl;
-  // std::cout << "thread_count = " << thread_count << std::endl;
-  // std::cout << "step = " << step << std::endl;
-  // if (size - k - 1 < num_treads) {
-  //   num_treads = size - k - 1;
-  // }
-  // int count = (size - k - 1) / num_treads;
-  // int start = k + 1;
+  std::vector<double> result;
+  for (int i = 0; i < size; ++i) result.push_back(system(i, size));
 
-  for (int i = 0; i < thread_count; ++i) {
-    // if (i == tread_count - 1) {
-    //   count = size - i * count - 1;
-    // }
-    threads.emplace_back(&GaussSolver::NullifyColumnParallel, this,
-                         std::ref(matrix), start, step, row);
-    start += step;
-  }
-
-  for (auto &th : threads) {
-    th.join();
-  }
-
-  threads.clear();
+  return result;
 }
 
 std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
@@ -134,8 +38,9 @@ std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
   std::vector<double> result(size);
   for (int k = 0; k < size; ++k) {
     int max_row = FindMaxRow(matrix, k, size);
-    SwapRows(matrix, k, max_row);
-    NullifyColumnSerial(matrix, k, size);
+    int pivot_row = k;
+    SwapRows(matrix, pivot_row, max_row);
+    NullifyColumn(matrix, pivot_row, size);
   }
 
   SolveEquations(matrix, size, result);
@@ -143,39 +48,40 @@ std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
   return result;
 }
 
-int GaussSolver::FindMaxRow(const SLE::Matrix &matrix, int k,
-                            int equations) const {
-  double max_value = fabs(matrix[k][k]);
-  int max_row = k;
-  for (int i = k + 1; i < equations; ++i) {
-    if (fabs(matrix[i][k] - max_value) > kEPS) {
-      max_value = fabs(matrix[i][k]);
+int GaussSolver::FindMaxRow(const SLE::Matrix& matrix, int pivot_row,
+                            int size) const {
+  double max_value = fabs(matrix[pivot_row][pivot_row]);
+  int max_row = pivot_row;
+  for (int i = pivot_row + 1; i < size; ++i) {
+    if (fabs(matrix[i][pivot_row] - max_value) > kEPS) {
+      max_value = fabs(matrix[i][pivot_row]);
       max_row = i;
     }
   }
   return max_row;
 }
 
-void GaussSolver::SwapRows(SLE::Matrix &matrix, int k, int max_row) const {
-  if (max_row != k) {
-    std::swap(matrix[k], matrix[max_row]);
+void GaussSolver::SwapRows(SLE::Matrix& matrix, int pivot_row,
+                           int max_row) const {
+  if (max_row != pivot_row) {
+    std::swap(matrix[pivot_row], matrix[max_row]);
   }
 }
 
-void GaussSolver::NullifyColumnSerial(Matrix &matrix, int k, int size) const {
-  for (int i = k + 1; i < size; ++i) {
-    double coeff = (-matrix[i][k]) / matrix[k][k];
-    for (int j = k + 1; j <= size; ++j) {
-      matrix[i][j] += coeff * matrix[k][j];
+void GaussSolver::NullifyColumn(Matrix& matrix, int pivot_row, int size) const {
+  for (int i = pivot_row + 1; i < size; ++i) {
+    double coeff = (-matrix[i][pivot_row]) / matrix[pivot_row][pivot_row];
+    for (int j = pivot_row + 1; j <= size; ++j) {
+      matrix[i][j] += coeff * matrix[pivot_row][j];
     }
   }
 }
 
-void GaussSolver::SolveEquations(const SLE::Matrix &matrix, int variables,
-                                 std::vector<double> &result) const {
-  for (int i = variables - 1; i >= 0; --i) {
-    result[i] = matrix[i][variables];
-    for (int j = i + 1; j < variables; ++j) {
+void GaussSolver::SolveEquations(const SLE::Matrix& matrix, int size,
+                                 std::vector<double>& result) const {
+  for (int i = size - 1; i >= 0; --i) {
+    result[i] = matrix[i][size];
+    for (int j = i + 1; j < size; ++j) {
       result[i] -= matrix[i][j] * result[j];
     }
     result[i] /= matrix[i][i];

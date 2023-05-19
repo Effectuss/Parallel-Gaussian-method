@@ -7,11 +7,11 @@
 #include <string>
 #include <vector>
 
-#include "../SLE/SLE.h"
-#include "../SLE/generator_SLE.h"
-#include "../SLE/printer_SLE.h"
-#include "../SLE/reader_SLE.h"
-#include "../utils/timer.h"
+#include "SLE.h"
+#include "generator_SLE.h"
+#include "printer_SLE.h"
+#include "reader_SLE.h"
+#include "timer.h"
 
 class ConsoleInterface {
  public:

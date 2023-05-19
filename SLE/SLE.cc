@@ -81,9 +81,10 @@ std::vector<double> SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
     throw std::logic_error("The system is empty!");
   }
   std::vector<double> result;
+  int max_thread = std::thread::hardware_concurrency();
   while (execution_count--) {
     if (type_algo == GaussSolver::TypeOfGaussAlgo::kParallel) {
-      result = gauss_solver_.SolveParallelGauss(*this);
+      result = gauss_solver_.SolveParallelGauss(*this, max_thread);
     } else if (type_algo == GaussSolver::TypeOfGaussAlgo::kSerial) {
       result = gauss_solver_.SolveSerialGauss(*this);
     }
