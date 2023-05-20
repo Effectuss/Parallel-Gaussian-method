@@ -111,7 +111,8 @@ const std::vector<double> SLE::GetParallelResultSLE() const {
     throw std::logic_error("The system cant be solve");
   }
   std::vector<double> result;
-  result = gauss_solver_.SolveParallelGauss(*this);
+  int max_thread = std::thread::hardware_concurrency();
+  result = gauss_solver_.SolveParallelGauss(*this, max_thread);
   return result;
 }
 

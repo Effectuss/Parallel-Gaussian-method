@@ -30,6 +30,13 @@ class GaussSolver {
   void SolveEquations(const Matrix& matrix, int size,
                       std::vector<double>& result) const;
 
+  void MakeDiagonalSystem(Matrix& matrix, Barrier& barrier, Barrier& phase_one,
+                          int start, int end, int size) const;
+  void PerformForwardSubstitution(Matrix& matrix, int start, int end,
+                                  Barrier& barrier, int size) const;
+  void PerformBackwardSubstitution(Matrix& matrix, int start, int end,
+                                   Barrier& barrier, int size) const;
+
   static constexpr double kEPS = 1e-6;
 };
 #endif  // _SLE_GAUSS_SOLVER_H_

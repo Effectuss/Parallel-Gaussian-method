@@ -2,22 +2,64 @@
 
 #include "SLE.h"
 
-void GaussSolver::MakeDiagonalSystem() {}
+void GaussSolver::MakeDiagonalSystem(Matrix& matrix, Barrier& barrier,
+                                     Barrier& phase_one, int start, int end,
+                                     int size) const {
+  PerformForwardSubstitution(matrix, start, end, barrier, size);
+  if (end == size) {
+    matrix[end - 1][end] /= matrix[end - 1][end - 1];
+  }
+  phase_one.Wait();
+  PerformBackwardSubstitution(matrix, start, end, barrier, size);
+}
+
+void GaussSolver::PerformForwardSubstitution(Matrix& matrix, int start, int end,
+                                             Barrier& barrier, int size) const {
+  for (int k = 0; k < size - 1; ++k) {
+    for (int i = k + 1; i < size; ++i) {
+      if ((i >= start) && (i < end)) {
+        double coeff = (-matrix[i][k]) / matrix[k][k];
+        for (int j = 1; j <= size; ++j) {
+          matrix[i][j] += coeff * matrix[k][j];
+        }
+      }
+    }
+    barrier.Wait();
+  }
+}
+
+void GaussSolver::PerformBackwardSubstitution(Matrix& matrix, int start,
+                                              int end, Barrier& barrier,
+                                              int size) const {
+  for (int i = size - 2; i >= 0; --i) {
+    if ((i >= start) && (i < end)) {
+      for (int j = i + 1; j < size; ++j) {
+        matrix[i][size] -= matrix[i][j] * matrix[j][size];
+      }
+      matrix[i][size] /= matrix[i][i];
+    }
+    barrier.Wait();
+  }
+}
 
 std::vector<double> GaussSolver::SolveParallelGauss(SLE system,
                                                     int numb_thread) const {
   if (numb_thread > std::thread::hardware_concurrency() || numb_thread <= 0) {
     throw std::logic_error("The number of threads incorrect! Try again!");
   }
+
   std::vector<std::thread> pool_thread;
   Barrier barrier(numb_thread), phase_one(numb_thread);
   int size = system.GetAmountOfEquations();
   int step_interval = size / (numb_thread - 1);
+  SLE::Matrix matrix = system.GetAugmentedMatrix();
 
   for (int i = 0; i < numb_thread - 1; ++i) {
     int start = step_interval * i;
     int end = step_interval * (i + 1);
-    pool_thread.emplace_back();
+    pool_thread.emplace_back(&GaussSolver::MakeDiagonalSystem, this,
+                             std::ref(matrix), std::ref(barrier),
+                             std::ref(phase_one), start, end, size);
   }
 
   for (auto& th : pool_thread) {
