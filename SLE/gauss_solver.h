@@ -1,10 +1,6 @@
 #ifndef _SLE_GAUSS_SOLVER_H_
 #define _SLE_GAUSS_SOLVER_H_
 
-#include <pthread.h>
-
-#include <atomic>
-#include <condition_variable>
 #include <mutex>
 #include <thread>
 #include <vector>
