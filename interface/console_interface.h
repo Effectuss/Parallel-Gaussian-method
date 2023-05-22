@@ -53,15 +53,16 @@ class ConsoleInterface {
 
   bool StartNeedPart(MenuSteps menu_step);
   bool SelectItemForFirstPartMenu();
-  std::string ReadFullPathToFile();
+  static std::string ReadFullPathToFile();
   bool SelectItemForSecondPartMenu();
   void ReadNumberOfExecution();
   bool SelectedItemForThirdPartMenu();
   void PrintExecutionTimeOfAlgorithms();
 
-  void ClearCin();
-  void ClearConsole();
-  int ReadMenuOption(const std::string& current_part_);
+  static void ClearCin();
+  static void ClearConsole();
+  static int ReadMenuOption(const std::string& current_part_);
+  void RunBothAlgorithmsForCompare();
 
   static constexpr int kExit = 0;
   static const std::vector<std::string> menu_items_;

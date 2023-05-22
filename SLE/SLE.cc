@@ -1,6 +1,6 @@
 #include "SLE.h"
 
-int SLE::FindRankOfMatrix(Matrix matrix) const {
+int SLE::FindRankOfMatrix(Matrix matrix) {
   int rows = matrix.size();
   int cols = matrix.at(0).size();
   int rank = 0;
@@ -21,7 +21,7 @@ int SLE::FindRankOfMatrix(Matrix matrix) const {
 }
 
 int SLE::FindPivotRow(const SLE::Matrix &matrix, const int j,
-                      const int start_row, const int end_row) const {
+                      const int start_row, const int end_row) {
   int pivot_row = -1;
   double max_value = 0.0;
   const double kEPS = 1e-9;
@@ -37,12 +37,12 @@ int SLE::FindPivotRow(const SLE::Matrix &matrix, const int j,
   return pivot_row;
 }
 
-void SLE::SwapRows(SLE::Matrix &matrix, const int row1, const int row2) const {
+void SLE::SwapRows(SLE::Matrix &matrix, const int row1, const int row2) {
   std::swap(matrix[row1], matrix[row2]);
 }
 
 void SLE::EliminateSubsequentRows(Matrix &matrix, const int rank,
-                                  const int col) const {
+                                  const int col) {
   int rows = matrix.size();
   int cols = matrix.at(0).size();
 
@@ -69,7 +69,7 @@ bool SLE::IsLinearSystemCompatible() const {
 }
 
 std::vector<double> SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
-                                       int execution_count) {
+                                       int execution_count) const {
   if (!IsLinearSystemCompatible()) {
     throw std::logic_error("The system cant be solve");
   }
@@ -84,9 +84,9 @@ std::vector<double> SLE::SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
   int max_thread = std::thread::hardware_concurrency();
   while (execution_count--) {
     if (type_algo == GaussSolver::TypeOfGaussAlgo::kParallel) {
-      result = gauss_solver_.SolveParallelGauss(*this, max_thread);
+      result = GaussSolver::SolveParallelGauss(*this, max_thread);
     } else if (type_algo == GaussSolver::TypeOfGaussAlgo::kSerial) {
-      result = gauss_solver_.SolveSerialGauss(*this);
+      result = GaussSolver::SolveSerialGauss(*this);
     }
   }
   return result;
@@ -112,7 +112,7 @@ const std::vector<double> SLE::GetParallelResultSLE() const {
   }
   std::vector<double> result;
   int max_thread = std::thread::hardware_concurrency();
-  result = gauss_solver_.SolveParallelGauss(*this, max_thread);
+  result = GaussSolver::SolveParallelGauss(*this, max_thread);
   return result;
 }
 
@@ -121,7 +121,7 @@ const std::vector<double> SLE::GetSerialResultSLE() const {
     throw std::logic_error("The system cant be solve");
   }
   std::vector<double> result;
-  result = gauss_solver_.SolveSerialGauss(*this);
+  result = GaussSolver::SolveSerialGauss(*this);
   return result;
 }
 

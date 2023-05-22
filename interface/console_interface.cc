@@ -144,6 +144,7 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
       PrinterSLE::PrintSerialResultSLE(linear_equations_);
       break;
     case ItemsForThirdPartMenu::kCompareTime:
+      RunBothAlgorithmsForCompare();
       PrintExecutionTimeOfAlgorithms();
       break;
     case ItemsForThirdPartMenu::kChangeSLE:
@@ -162,8 +163,26 @@ bool ConsoleInterface::SelectedItemForThirdPartMenu() {
   return exit_flag;
 }
 
+void ConsoleInterface::RunBothAlgorithmsForCompare() {
+  timer_parallel_gauss_.StartTimer();
+  linear_equations_.SolveSLEGauss(GaussSolver::TypeOfGaussAlgo::kParallel,
+                                  execution_count);
+  timer_parallel_gauss_.EndTimer();
+  timer_serial_gauss_.StartTimer();
+  linear_equations_.SolveSLEGauss(GaussSolver::TypeOfGaussAlgo::kSerial,
+                                  execution_count);
+  timer_serial_gauss_.EndTimer();
+}
+
 void ConsoleInterface::PrintExecutionTimeOfAlgorithms() {
   std::cout << "\n\u001b[42;1mALGORITHM EXECUTION TIME\u001b[0m\n";
+  std::cout << "\033[39m\033[1;29mSLE size: "
+            << linear_equations_.GetAmountOfEquations() << " x "
+            << linear_equations_.GetAmountOfVariable() << std::endl;
+  std::cout << "\033[39m\033[1;29mNumber of executions: " << execution_count
+            << std::endl;
+  std::cout << "\033[39m\033[1;29mNumber of thread in parallel method: "
+            << std::thread::hardware_concurrency() << std::endl;
   std::cout << "\033[39m\033[1;29mParallel Gauss algoritm: ";
   timer_parallel_gauss_.DisplayTimerValues();
   std::cout << "\033[39m\033[1;29mSerial Gauss algoritm: ";

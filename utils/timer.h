@@ -16,4 +16,4 @@ class Timer {
   std::chrono::duration<double, std::milli> duration_;
 };
 
-#endif  // _UTILS_TIMER_H_
+#endif  // _UTILS_TIMER_H_s

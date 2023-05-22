@@ -1,14 +1,16 @@
 #include "barrier.h"
 
 void Barrier::Wait() {
-  std::unique_lock<std::mutex> lock{mtx_};
-  int l_gen = generation_;
-  if (!--count_) {
-    ++generation_;
-    count_ = threshold_;
-    cond_.notify_all();
-  } else {
-    while (l_gen == generation_)  // spurious awake protection
-      cond_.wait(lock, [this, l_gen] { return l_gen != generation_; });
+  std::unique_lock<std::mutex> lock(mutex_);  // acquire lock
+  std::size_t inst = instance_;  // store current instance for comparison
+                                 // in predicate
+
+  if (++wait_count_ == num_threads_) {  // all threads reached barrier
+    wait_count_ = 0;                    // reset wait_count
+    instance_++;  // increment instance for next use of barrier and to
+                  // pass condition variable predicate
+    cv_.notify_all();
+  } else {  // not all threads have reached barrier
+    cv_.wait(lock, [this, &inst]() { return instance_ != inst; });
   }
 }

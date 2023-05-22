@@ -4,7 +4,7 @@
 
 void GaussSolver::MakeDiagonalSystem(Matrix& matrix, Barrier& barrier,
                                      Barrier& phase_one, int start, int end,
-                                     int size) const {
+                                     int size) {
   PerformForwardSubstitution(matrix, start, end, barrier, size);
 
   if (end == size) {
@@ -16,10 +16,9 @@ void GaussSolver::MakeDiagonalSystem(Matrix& matrix, Barrier& barrier,
   PerformBackwardSubstitution(matrix, start, end, barrier, size);
 }
 
-std::vector<double> GaussSolver::SolveParallelGauss(SLE system,
-                                                    int numb_thread) const {
-  if (numb_thread > static_cast<int>(std::thread::hardware_concurrency()) ||
-      numb_thread <= 0) {
+std::vector<double> GaussSolver::SolveParallelGauss(const SLE& system,
+                                                    int numb_thread) {
+  if (numb_thread <= 0) {
     throw std::logic_error("The number of threads incorrect! Try again!");
   }
 
@@ -33,9 +32,8 @@ std::vector<double> GaussSolver::SolveParallelGauss(SLE system,
   for (int i = 0; i < numb_thread; ++i) {
     int start = step_interval * i;
     int end = step_interval * (i + 1);
-    pool_thread.emplace_back(&GaussSolver::MakeDiagonalSystem, this,
-                             std::ref(matrix), std::ref(barrier),
-                             std::ref(phase_one), start,
+    pool_thread.emplace_back(&GaussSolver::MakeDiagonalSystem, std::ref(matrix),
+                             std::ref(barrier), std::ref(phase_one), start,
                              (i == numb_thread - 1) ? size : end, size);
   }
 
@@ -50,7 +48,7 @@ std::vector<double> GaussSolver::SolveParallelGauss(SLE system,
 }
 
 void GaussSolver::PerformForwardSubstitution(Matrix& matrix, int start, int end,
-                                             Barrier& barrier, int size) const {
+                                             Barrier& barrier, int size) {
   for (int k = 0; k < size; ++k) {
     for (int i = k + 1; i < size; ++i) {
       if ((i >= start) && (i < end)) {
@@ -64,7 +62,7 @@ void GaussSolver::PerformForwardSubstitution(Matrix& matrix, int start, int end,
 
 void GaussSolver::PerformBackwardSubstitution(Matrix& matrix, int start,
                                               int end, Barrier& barrier,
-                                              int size) const {
+                                              int size) {
   for (int i = size - 2; i > -1; --i) {
     if ((i >= start) && (i < end)) {
       for (int j = i + 1; j < size; ++j)
@@ -75,7 +73,7 @@ void GaussSolver::PerformBackwardSubstitution(Matrix& matrix, int start,
   }
 }
 
-std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
+std::vector<double> GaussSolver::SolveSerialGauss(const SLE& system) {
   int size = system.GetAmountOfEquations();
   SLE::Matrix matrix = system.GetAugmentedMatrix();
   std::vector<double> result(size);
@@ -92,7 +90,7 @@ std::vector<double> GaussSolver::SolveSerialGauss(SLE system) const {
 }
 
 int GaussSolver::FindMaxRow(const SLE::Matrix& matrix, int pivot_row,
-                            int size) const {
+                            int size) {
   double max_value = fabs(matrix[pivot_row][pivot_row]);
   int max_row = pivot_row;
   for (int i = pivot_row + 1; i < size; ++i) {
@@ -104,14 +102,13 @@ int GaussSolver::FindMaxRow(const SLE::Matrix& matrix, int pivot_row,
   return max_row;
 }
 
-void GaussSolver::SwapRows(SLE::Matrix& matrix, int pivot_row,
-                           int max_row) const {
+void GaussSolver::SwapRows(SLE::Matrix& matrix, int pivot_row, int max_row) {
   if (max_row != pivot_row) {
     std::swap(matrix[pivot_row], matrix[max_row]);
   }
 }
 
-void GaussSolver::NullifyColumn(Matrix& matrix, int pivot_row, int size) const {
+void GaussSolver::NullifyColumn(Matrix& matrix, int pivot_row, int size) {
   for (int i = pivot_row + 1; i < size; ++i) {
     double coeff = (-matrix[i][pivot_row]) / matrix[pivot_row][pivot_row];
     for (int j = pivot_row + 1; j <= size; ++j) {
@@ -121,7 +118,7 @@ void GaussSolver::NullifyColumn(Matrix& matrix, int pivot_row, int size) const {
 }
 
 void GaussSolver::SolveEquations(const SLE::Matrix& matrix, int size,
-                                 std::vector<double>& result) const {
+                                 std::vector<double>& result) {
   for (int i = size - 1; i >= 0; --i) {
     result[i] = matrix[i][size];
     for (int j = i + 1; j < size; ++j) {

@@ -13,25 +13,27 @@ class GaussSolver {
  public:
   enum TypeOfGaussAlgo { kParallel, kSerial };
 
-  std::vector<double> SolveSerialGauss(SLE system) const;
-  std::vector<double> SolveParallelGauss(SLE system, int numb_thread) const;
+  static std::vector<double> SolveSerialGauss(const SLE& system);
+  static std::vector<double> SolveParallelGauss(const SLE& system,
+                                                int numb_thread);
 
  private:
   using Matrix = std::vector<std::vector<double> >;
   using Vector = std::vector<double>;
 
-  int FindMaxRow(const Matrix& matrix, int pivot_row, int size) const;
-  void SwapRows(Matrix& matrix, int pivot_row, int max_row) const;
-  void NullifyColumn(Matrix& matrix, int pivot_row, int size) const;
-  void SolveEquations(const Matrix& matrix, int size,
-                      std::vector<double>& result) const;
+  static int FindMaxRow(const Matrix& matrix, int pivot_row, int size);
+  static void SwapRows(Matrix& matrix, int pivot_row, int max_row);
+  static void NullifyColumn(Matrix& matrix, int pivot_row, int size);
+  static void SolveEquations(const Matrix& matrix, int size,
+                             std::vector<double>& result);
 
-  void MakeDiagonalSystem(Matrix& matrix, Barrier& barrier, Barrier& phase_one,
-                          int start, int end, int size) const;
-  void PerformForwardSubstitution(Matrix& matrix, int start, int end,
-                                  Barrier& barrier, int size) const;
-  void PerformBackwardSubstitution(Matrix& matrix, int start, int end,
-                                   Barrier& barrier, int size) const;
+  static void MakeDiagonalSystem(Matrix& matrix, Barrier& barrier,
+                                 Barrier& phase_one, int start, int end,
+                                 int size);
+  static void PerformForwardSubstitution(Matrix& matrix, int start, int end,
+                                         Barrier& barrier, int size);
+  static void PerformBackwardSubstitution(Matrix& matrix, int start, int end,
+                                          Barrier& barrier, int size);
 
   static constexpr double kEPS = 1e-6;
 };

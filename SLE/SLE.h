@@ -36,15 +36,15 @@ class SLE {
 
   bool IsLinearSystemCompatible() const;
   std::vector<double> SolveSLEGauss(GaussSolver::TypeOfGaussAlgo type_algo,
-                                    int execution_count);
+                                    int execution_count) const;
 
  private:
-  int FindRankOfMatrix(Matrix matrix) const;
-  int FindPivotRow(const Matrix& matrix, const int j, const int start_row,
-                   const int end_row) const;
-  void SwapRows(Matrix& matrix, const int row1, const int row2) const;
-  void EliminateSubsequentRows(Matrix& matrix, const int rank,
-                               const int col) const;
+  static int FindRankOfMatrix(Matrix matrix);
+  static int FindPivotRow(const Matrix& matrix, const int j,
+                          const int start_row, const int end_row);
+  static void SwapRows(Matrix& matrix, const int row1, const int row2);
+  static void EliminateSubsequentRows(Matrix& matrix, const int rank,
+                                      const int col);
 
   bool IsEmptySystem() const;
   void ResizeAugmentedMatrix();
@@ -57,7 +57,6 @@ class SLE {
   int rows_augmented_matrix_{};
   int cols_augmented_matrix_{};
   Matrix augmented_matrix_{};
-  GaussSolver gauss_solver_;
 };
 
 #endif  // _SLE_SYSTEM_OF_LINEAR_EQUATIONS_H_

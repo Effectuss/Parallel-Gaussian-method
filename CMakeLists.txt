@@ -65,6 +65,8 @@ if(CPPCHECK)
         "--quiet"
         "--language=c++"
         "--std=c++17"
+        "--suppress=missingInclude"
+        "--suppress=unusedFunction"
     )
     add_custom_target(
         cppcheck
